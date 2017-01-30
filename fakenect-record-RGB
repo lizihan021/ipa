@@ -48,12 +48,6 @@ char *rgb_name = 0;
 FILE *depth_stream=0;
 FILE *rgb_stream=0;
 
-void dump_depth(FILE *fp, void *data, int data_size)
-{
-	fprintf(fp, "P5 %d %d 65535\n", FREENECT_FRAME_W, FREENECT_FRAME_H);
-	fwrite(data, data_size, 1, fp);
-}
-
 void dump_rgb(FILE *fp, void *data, int data_size)
 {
 	fprintf(fp, "P6 %d %d 255\n", FREENECT_FRAME_W, FREENECT_FRAME_H);
@@ -106,22 +100,12 @@ void dump(char type, uint32_t timestamp, void *data, int data_size)
 	FILE *fp;
 	last_timestamp = timestamp;
 	switch (type) {
-		case 'd':
-			fp = open_dump(type, cur_time, timestamp, data_size, "pgm");
-			dump_depth(fp, data, data_size);
-			fclose(fp);
-			break;
 		case 'r':
 			fp = open_dump(type, cur_time, timestamp, data_size, "ppm");
 			dump_rgb(fp, data, data_size);
 			fclose(fp);
 			break;
-		case 'a':
-			fp = open_dump(type, cur_time, timestamp, data_size, "dump");
-			fwrite(data, data_size, 1, fp);
-			fclose(fp);
-			break;
-	}
+		}
 }
 
 void dump_ffmpeg_24(FILE *stream, uint32_t timestamp, void *data,
@@ -143,36 +127,9 @@ void dump_ffmpeg_pad16(FILE *stream, uint32_t timestamp, void *data,
 	}
 }
 
-void snapshot_accel(freenect_device *dev)
-{
-	freenect_raw_tilt_state* state;
-	if (!last_timestamp)
-		return;
-	freenect_update_tilt_state(dev);
-	state = freenect_get_tilt_state(dev);
-	dump('a', last_timestamp, state, sizeof *state);
-}
-
-
-void depth_cb(freenect_device *dev, void *depth, uint32_t timestamp)
-{
-	dump('d', timestamp, depth, freenect_get_current_depth_mode(dev).bytes);
-}
-
-
 void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
 	dump('r', timestamp, rgb, freenect_get_current_video_mode(dev).bytes);
-}
-
-void depth_cb_ffmpeg(freenect_device *dev, void *depth, uint32_t timestamp)
-{
-	double cur_time = get_time();
-	fprintf(index_fp, "d-%f-%u\n", cur_time, timestamp);
-
-	dump_ffmpeg_pad16(depth_stream, timestamp, depth,
-                      freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM,
-                                               FREENECT_DEPTH_11BIT).bytes);
 }
 
 void rgb_cb_ffmpeg(freenect_device *dev, void *rgb, uint32_t timestamp)
@@ -186,7 +143,6 @@ void rgb_cb_ffmpeg(freenect_device *dev, void *rgb, uint32_t timestamp)
 
 void init_ffmpeg_streams()
 {
-	depth_stream = open_ffmpeg(depth_name);
 	rgb_stream = open_ffmpeg(rgb_name);
 }
 
@@ -217,23 +173,16 @@ void init()
 		printf("Error: Cannot get device\n");
 		return;
 	}
-	print_mode("Depth", freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_11BIT));
 	print_mode("Video", freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
-	freenect_set_depth_mode(dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_11BIT));
-	freenect_start_depth(dev);
 	freenect_set_video_mode(dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
 	freenect_start_video(dev);
 	if (use_ffmpeg) {
 		init_ffmpeg_streams();
-		freenect_set_depth_callback(dev, depth_cb_ffmpeg);
 		freenect_set_video_callback(dev, rgb_cb_ffmpeg);
 	} else {
-		freenect_set_depth_callback(dev, depth_cb);
 		freenect_set_video_callback(dev, rgb_cb);
 	}
 	while (running && freenect_process_events(ctx) >= 0)
-		snapshot_accel(dev);
-	freenect_stop_depth(dev);
 	freenect_stop_video(dev);
 	freenect_close_device(dev);
 	freenect_shutdown(ctx);
@@ -302,18 +251,9 @@ int main(int argc, char **argv)
 		if (!index_fp)
 			return 1;
 
-		depth_name = malloc(strlen(out_dir) + 50);
 		rgb_name = malloc(strlen(out_dir) + 50);
-		sprintf(depth_name, "%s-depth.avi", out_dir);
 		sprintf(rgb_name, "%s-rgb.avi", out_dir);
 
-		f = fopen(depth_name, "r");
-		if (f) {
-			printf("Error: %s already exists, to avoid overwriting "
-				   "use a different name.\n", depth_name);
-			fclose(f);
-			exit(1);
-		}
 		f = fopen(rgb_name, "r");
 		if (f) {
 			printf("Error: %s already exists, to avoid overwriting "
@@ -322,9 +262,7 @@ int main(int argc, char **argv)
 			exit(1);
 		}
 		init();
-		free(depth_name);
 		free(rgb_name);
-		if (depth_stream) fclose(depth_stream);
 		if (rgb_stream) fclose(rgb_stream);
 		fclose(index_fp);
 	} else {

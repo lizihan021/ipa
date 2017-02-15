@@ -5,7 +5,7 @@
   <li>Attempts to insert a new document representing a robot, with _id=1 (will continue if already exists)</li>
   <li>Creates a tkinter GUI </li>
   <li>Receives keyboard inputs, translates them into Roomba commands, and sends commands to the document's 'command' value</li>
-  <li>Can also use 'Q' and 'W' to send a prescripted message to teh docment's 'message' value</li>
+  <li>Can also use 'Q' and 'W' to send a prescripted message to the docment's 'message' value</li>
   </ul>
 <h2>Robot_server.py</h2>
   <ul>

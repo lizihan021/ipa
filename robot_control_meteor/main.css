@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+
+#main {
+    margin: auto;
+    width: 650px;
+    height: 100%;
+    font-weight: 300;
+
+    align-content: center;
+}
+
+#main p.title {
+
+    font-size: 40px;
+}

@@ -1,0 +1,39 @@
+
+<head>
+    <meta charset="UTF-8">
+    <title>Robot Commands</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
+    <link href='main.css' rel='stylesheet' type='text/css'>
+    <link href='reset.css' rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <div id="main">
+        {{#if showRobotDisplay}}
+            {{> robotDisplay}}
+        {{else}}
+            {{> robots}}
+        {{/if}}
+    </div>
+
+</body>
+
+<template name="robotStatus">
+    <p class="title">Robot Status</p>
+    {{#each summary}}
+        <h2>Robot #{{_id}}</h2>
+        <p>Current command: {{command}}</p>
+        <p>Current message: {{message}}</p>
+    {{/each}}
+    <button class="user">User Side</button>
+</template>
+
+<template name="robotDisplay">
+    {{#each messages}}
+        <p style="font-size: 150px; margin-top: 200px;">{{message}}</p>
+    {{/each}}
+    <button class="status">Status Page</button>
+</template>
+
+

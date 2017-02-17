@@ -1,30 +1,53 @@
 /**
  * Created by aksha on 2/3/2017.
  */
-
-RobotList = new Mongo.Collection('robots');
+RobotList = new Mongo.Collection('commands');
 
 // If you want to test the app with a fake robot, uncomment below
 
-// var robot = {
-//         '_id': 1,
+// let robot = {
+//         '_id': '1',
 //         'type': 'robot',
 //         'command': '131',
 //         'message': 'Hello!'
 // };
-//
+
 // RobotList.insert(robot);
 
 if(Meteor.isClient){
     console.log('Robot control is running');
 
-    // Define session that represents the message display
+    // Define sessions that represents the message display, and the control interface
     // robotStatus: controller-end template that displays the current status of all robots
     // robotDisplay: user-end template that will be shows on iPad, which will display the current
     // message of the robot
+    // robotControl: controls interface for a particular robot
     Template.body.helpers({
         showRobotDisplay() {
             return Session.get('showRobotDisplay');
+        },
+        showRobotControls() {
+            return Session.get('showRobotControls');
+        }
+    });
+
+    // Functions for robotStatus
+
+    Template.robotStatus.helpers({
+        'summary': function(){
+            return RobotList.find();
+        }
+    });
+
+    Template.robotStatus.events({
+
+        'click button.user': function() {
+            event.preventDefault();
+            Session.set('showRobotDisplay', true);
+        },
+        'click button.control': function() {
+            event.preventDefault();
+            Session.set('showRobotControls', true);
         }
     });
 
@@ -43,21 +66,14 @@ if(Meteor.isClient){
         }
     });
 
-    // Functions for robotStatus
+    // Functions for robotControls
 
-    Template.robotStatus.helpers({
-        'summary': function(){
-            return RobotList.find();
+    Template.robotControl.helpers({
+        'controls': function(){
+            let control = document.getElementById('controls');
+            control.addEventListener('keydown', function(event){Controls.readControls(event)}, true);
         }
     });
-
-    Template.robotStatus.events({
-
-        'click button.user': function() {
-            event.preventDefault();
-            Session.set('showRobotDisplay', true);
-        }
-    })
 }
 
 if(Meteor.isServer){

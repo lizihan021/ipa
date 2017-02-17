@@ -5,15 +5,18 @@
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
     <link href='main.css' rel='stylesheet' type='text/css'>
     <link href='reset.css' rel="stylesheet" type="text/css">
+
 </head>
 
-<body>
+<body id="controls">
 
     <div id="main">
         {{#if showRobotDisplay}}
             {{> robotDisplay}}
+        {{else if showRobotControls}}
+            {{> robotControl}}
         {{else}}
-            {{> robots}}
+            {{> robotStatus}}
         {{/if}}
     </div>
 
@@ -27,6 +30,7 @@
         <p>Current message: {{message}}</p>
     {{/each}}
     <button class="user">User Side</button>
+    <button class="control">Controls</button>
 </template>
 
 <template name="robotDisplay">
@@ -34,6 +38,10 @@
         <p style="font-size: 150px; margin-top: 200px;">{{message}}</p>
     {{/each}}
     <button class="status">Status Page</button>
+</template>
+
+<template name="robotControl">
+    {{controls}}
 </template>
 
 

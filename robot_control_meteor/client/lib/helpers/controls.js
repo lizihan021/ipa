@@ -45,6 +45,36 @@ Controls = {
                 this.sendMessage('Goodbye!');
                 console.log('Message send: goodbye');
                 break;
+            case 70:    //f
+                this.sendMessage('Moving Forwards');
+                console.log('Message send: moving_forward');
+                break;
+            case 88:    //x
+                this.sendMessage('Moving Backwards');
+                console.log('Message send: moving_backward');
+                break;
+
+            case 71:    //g
+                this.sendMessage('Greetings!');
+                console.log('Message send: greetings');
+                break;
+            case 89:    //y
+                this.sendMessage('Yes!');
+                console.log('Message send: yes');
+                break;
+            case 78:    //n
+                this.sendMessage('No!');
+                console.log('Message send: no');
+                break;
+            case 186:    //;
+                this.sendMessage(':)');
+                console.log('Message send: :)');
+                break;
+// moving forwards, backwards, greetings, yes, no, thanks
+
+
+
+
         }
     },
     sendCommand: function (command) {

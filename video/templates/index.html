@@ -12,14 +12,19 @@
 
   <!-- Latest compiled JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
   <script type="text/javascript">
   $(document).ready(function(){
     $("#toggle-size").click(function(){
       if($("#video_1").width() == 100){
-        $("#video_1").width(600);
+        $("#video_1").animate({
+          width: 600
+        },500);
       }
       else{
-        $("#video_1").width(100);
+        $("#video_1").animate({
+          width: 100
+        },500);
       }
     });
   });
@@ -29,12 +34,16 @@
 <body>
 
   <div class="container">
-    <h1>Video Streaming Demonstration</h1>
-    <img id="video_1" style="width:100px" src="IMG_0574.JPG">
     <div class="row">
-      <button id="toggle-size" type="button" class="btn btn-primary">
+      <h1>Video Streaming Demonstration</h1>
+    </div>
+    <div class="row">
+      <button id="toggle-size" type="button" style="margin-bottom: 10px" class="btn btn-primary">
         Toggle Size
       </button>
+    </div>
+    <div class="row">
+      <img id="video_1" style="width:100px" src="IMG_0574.JPG">
     </div>
   </div>
 

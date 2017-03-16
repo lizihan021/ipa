@@ -14,11 +14,12 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript">
     $("#toggle-size").click(function(){
-      if($("video_1").width() == 100){
-        $("video_1").width(600);
+      alert("fdsa");
+      if($("#video_1").width() == 100){
+        $("#video_1").width(600);
       }
       else{
-        $("video_1").width(100);
+        $("#video_1").width(100);
       }
     });
   </script>
@@ -28,7 +29,9 @@
 
   <div class="container">
     <h1>Video Streaming Demonstration</h1>
-    <img id="video_1" style="width:600px;" src="{{ url_for('video_feed') }}">
+    <img id="video_2" style="width:600px;" src="{{ url_for('video_feed') }}">
+    <img id="video_1" style="width:600px;" src="IMG_0574.JPG">
+    
     <button id="toggle-size" type="button" class="btn btn-primary">
       Toggle Size
     </button>

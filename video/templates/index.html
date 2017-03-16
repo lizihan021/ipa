@@ -4,17 +4,28 @@
 <head>
   <title>Video Streaming Demonstration</title>
   <!-- Bootstrap -->
-  <script src="style/jquery.min.js"></script>
-  <link rel="stylesheet" href="style/bootstrap.min.css">
-  <script src="style/bootstrap.min.js"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    $("#video_1")
+
+  </script>
   
 </head>
 <body>
 
   <div class="container">
     <h1>Video Streaming Demonstration</h1>
-    <img src="{{ url_for('video_feed') }}">
+    <img id="video_1" src="{{ url_for('video_feed') }}">
+    <button type="button" class="btn btn-primary">
+      Toggle Size
+    </button>
   </div>
 
 </body>

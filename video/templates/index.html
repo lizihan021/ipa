@@ -17,20 +17,6 @@
 
   $(document).ready(function(){
     var clicktime = 0;
-    $("#toggle-size").click(function(){
-      if(clicktime%2 == 1){
-        $("#video_1").animate({
-          width: "50%",
-          left: "+=50"
-        },500);
-      }
-      else{
-        $("#video_1").animate({
-          width: "10%",
-        },500);
-      }
-      clicktime ++;
-    });
     
     $("#video_2").click(function(){
       if(clicktime%2 == 0){
@@ -40,7 +26,7 @@
       }
       else{
         $("#video_1").animate({
-          width: "50%"
+          width: "23%"
         },500);
       }
       clicktime ++;
@@ -52,19 +38,24 @@
 <body>
 
   <div class="container">
+
     <div class="row">
       <h1>Video Streaming Demonstration</h1>
     </div>
+
     <div class="row">
-      <button id="toggle-size" type="button" style="margin-bottom: 10px" class="btn btn-primary">
-        Toggle Size
-      </button>
-    </div>
-    <div class="row">
-      <div id="video_2">
-        <img id="video_1" style="width:50%" src="IMG_0574.JPG">
+      <div style="position:absolute;z-index:3" class="text-left">
+        <img style="width:70%" src="yo.png">
+      </div>
+      <div id="video_2" style="position:absolute;z-index:4" class="text-right" >
+        <div class="col-sm-11">
+          <img id="video_1" style="width:23%" src="IMG_0563.jpg">
+        </div>
       </div>
     </div>
+
+    <div></div>
+    
   </div>
 
 </body>

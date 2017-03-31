@@ -17,19 +17,35 @@
 
   $(document).ready(function(){
     var clicktime = 0;
+    var start = new Date().getTime();
+    var totalTime = 0;
+    var toBigtime;
+
     
     $("#video_2").click(function(){
       if(clicktime%2 == 0){
         $("#video_1").animate({
           width: "100%"
         },500);
+        toBigtime = new Date().getTime();
       }
       else{
         $("#video_1").animate({
           width: "23%"
         },500);
+        var tmp = new Date().getTime();
+        totalTime += tmp - toBigtime;
+        $("#showText2").html("<p>Total time opening big screen: "+ totalTime/1000 +" s</p>");
       }
       clicktime ++;
+    });
+
+    $("#interesting").click(function(){
+      //var localTime = new Date();
+      var end = new Date().getTime();
+
+      console.log((end-start)/1000);
+      $("#showText").html("<p>Time from page loaded to click: " + (end-start)/1000 + " s</p>");
     });
   });
   </script>
@@ -40,7 +56,17 @@
   <div class="container">
 
     <div class="row">
-      <h1>Video Streaming Demonstration</h1>
+      <div class="col-sm-6">
+        <h1>Video Streaming Demonstration</h1>
+      </div>
+      <div class="col-sm-2 text-left">
+        <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">Click when event happens</button>
+        
+      </div>
+      <div class="col-sm-3 text-left" style="margin-left: 10px;">
+        <div id="showText" style="margin-top: 24px;"><p>Time from page loaded to click: 0.000 s</p></div>
+        <div id="showText2" style="margin-top: -10px;"><p>Total time opening big screen: 0.000 s</p></div>
+      </div>
     </div>
 
     <div class="row">
@@ -54,7 +80,7 @@
       </div>
     </div>
 
-    <div></div>
+    
     
   </div>
 

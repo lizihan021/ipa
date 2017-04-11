@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <style>
+        #wrapper {
+            width: 100%;
+            overflow: visible;
+        }
+
+        #active {
+            width: 50%;
+            height: 700px;
+            background-color: aliceblue;
+            float: left;
+        }
+
+        #passive {
+            width: 30%;
+            height: 30%;
+            float: right;
+            background-color: indianred;
+            position: fixed;
+            left: 70%;
+        }
+
+        iframe {
+            pointer-events: none;
+        }
+
+        .button {
+            -moz-box-shadow: 0px 1px 0px 0px #1c1b18;
+            -webkit-box-shadow: 0px 1px 0px 0px #1c1b18;
+            box-shadow: 0px 1px 0px 0px #1c1b18;
+            background-color: #f2e8cb;
+            -moz-border-radius: 15px;
+            -webkit-border-radius: 15px;
+            border-radius: 15px;
+            border: 2px solid #333029;
+            display: inline-block;
+            cursor: pointer;
+            color: #505739;
+            font-family: Arial;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 12px 16px;
+            text-decoration: none;
+            text-shadow: 0px 1px 0px #ffffff;
+        }
+
+        .button:hover {
+            background-color: #ccc2a6;
+        }
+
+        .button:active {
+            position: relative;
+            top: 1px;
+        }
+    </style>
+
+    <script>
+        // Load the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/player_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // Replace the 'ytplayer' element with an <iframe> and
+        // YouTube player after the API code downloads.
+        var player;
+        function onYouTubePlayerAPIReady() {
+            player = new YT.Player('ytplayer', {});
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $(".button").hide();
+            var clicktime = 0;
+            var start = new Date().getTime();
+            var totalTime = 0;
+            var toBigtime;
+
+
+            $("#passive").click(function () {
+                if (clicktime % 2 == 0) {
+                    $("#passive").animate({
+                        width: "90%",
+                        left: "5%",
+                        right: "5%",
+                        height: "90%"
+                    }, 500);
+
+                    $("#yt").animate({
+                        height: "600px"
+                    }, 500);
+
+                    $(".button").show("slow");
+
+                    toBigtime = new Date().getTime();
+                }
+                else {
+                    $("#passive").animate({
+                        width: "30%",
+                        left: "70%",
+                        right: "0%",
+                        height: "30%"
+                    }, 500);
+
+                    $("#yt").animate({
+                        height: "250px"
+                    }, 500);
+
+                    $(".button").hide("slow");
+
+                    var tmp = new Date().getTime();
+                    totalTime += tmp - toBigtime;
+                    $("#showText2").html("<p>Time on video: " + totalTime / 1000 + " s</p>");
+                }
+                clicktime++;
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="active">
+        <p>Active Task</p>
+    </div>
+    <div id="passive">
+        <div id="video">
+
+            <iframe id="yt"
+                    width="100%"
+                    height="250px"
+                    src="https://www.youtube.com/embed/eWfkZlMIxb4?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1&amp;disablekb=1"
+                    frameborder="0">
+            </iframe>
+
+            <a href="#" class="button">Event</a>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

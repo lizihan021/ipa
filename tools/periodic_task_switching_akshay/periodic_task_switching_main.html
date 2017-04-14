@@ -57,18 +57,19 @@
 
     <script>
         $(document).ready(function () {
-            var alert_message = "<div id='alert'><a href='#' class='button'>Video</a></div>";
+            var i = 0;
             var alert_period = 60; // Seconds until alert
 
             // Append alert message to "alerts" div
             function alert() {
-                $("#alerts").append(alert_message);
+                $("#alerts").append("<div id='alert"+i+"'><a href='#' class='button'>Video "+i+"</a></div>");
+                i++;
             }
 
             // Send alert message every 60 seconds
             setInterval(function(){
                 alert();
-            }, alert_period * 1000);
+            }, alert_period * 100);
         });
     </script>
 </head>

@@ -22,20 +22,37 @@
             var toBigtime;
 
 
-            $("#video_2").click(function () {
+            $("#waper").click(function () {
                 if (clicktime % 2 == 0) {
-                    $("#video_1").animate({
-                        width: "100%"
-                    }, 500);
+                    $("#passive").animate({
+                        left: "0%",
+                        width: "100%",
+                        height: "75%"
+                    }, 500, function(){
+                        $("#yt").animate({
+                            height: "550px"
+                        }, 300);
+                        $("#to_input").slideDown(200);
+                    });
+                    
                     toBigtime = new Date().getTime();
                 }
                 else {
-                    $("#video_1").animate({
-                        width: "23%"
-                    }, 500);
+                    $("#to_input").slideUp(200);
+                    $("#yt").animate({
+                        height: "190px"
+                    }, 300, function (){
+                        $("#passive").animate({
+                            left: "75%",
+                            height: "25%",
+                            width: "20%"
+                        }, 500);
+                        
+                    });
+                    
                     var tmp = new Date().getTime();
                     totalTime += tmp - toBigtime;
-                    $("#showText2").html("<p>Time on video: " + totalTime / 1000 + " s</p>");
+                    $("#showText2").html("<p>Time on video: " + Math.ceil(totalTime / 1000)+ " s</p>");
                 }
                 clicktime++;
             });
@@ -44,25 +61,53 @@
                 //var localTime = new Date();
                 var end = new Date().getTime();
 
-                console.log((end - start) / 1000);
-                $("#showText").html("<p>Time since page loaded: " + (end - start) / 1000 + " s</p>");
+                $("#showText").html("<p>Time since page loaded: " + Math.ceil((end - start) / 1000) + " s</p>");
             });
         });
     </script>
+
+    <style>
+        #passive {
+            width: 20%;
+            height: 25%;
+            float: right;
+            position: fixed;
+            left: 75%;
+            z-index:4;
+        }
+        #to_input {
+            margin-top: -15px;
+            width: 100%;
+            height: 200px;
+            background-color: black;
+            display: none;
+        }
+        #title {
+            margin-top: 25px;
+        }
+        .title-pad {
+            margin-top: 5px;
+        }
+        iframe {
+            pointer-events: none;
+        } 
+    </style>
 
 </head>
 <body>
 
 <div class="container">
-
     <div class="row">
-        <div class="col-sm-2 text-left">
-            <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">2x</button>
+        
+    </div>
+    <div class="row">
+        <div class="col-sm-4 text-left">
+            <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">When the event happens</button>
 
         </div>
-        <div class="col-sm-3 text-left" style="margin-left: 25px;">
-            <div id="showText" style="margin-top: 24px;"><p>TIme since page loaded: 0.000 s</p></div>
-            <div id="showText2" style="margin-top: -10px;"><p>Time on video: 0.000 s</p></div>
+        <div class="col-sm-4 text-right" style="margin-left: 25px;">
+            <div id="showText" style="margin-top: 24px;"><p>Time since page loaded: 0 s</p></div>
+            <div id="showText2" style="margin-top: -10px;"><p>Time on video: 0 s</p></div>
         </div>
     </div>
 
@@ -70,9 +115,25 @@
         <div style="position:absolute;z-index:3" class="text-left">
             <img style="width:70%" src="mturk_active_task.PNG">
         </div>
-        <div id="video_2" style="position:absolute;z-index:4" class="text-right">
-            <div class="col-sm-11">
-                <img id="video_1" style="width:23%" src="mturk_vid_next.PNG">
+        <div id="passive" >
+            <div id="waper">
+                <iframe id="yt"
+                    width="100%"
+                    height="190px"
+                    src="https://www.youtube.com/embed/eWfkZlMIxb4?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1&amp;disablekb=1&amp;modestbranding=1"
+                    frameborder="0">
+                </iframe>
+            </div>
+            <div id="to_input">
+                <div class="col-sm-5"></div>
+                <div class="col-sm-2">
+                    <div class="form-group text-center">
+                      <input type="text" class="form-control" id="title" placeholder="title">
+                      <input type="text" class="form-control title-pad" id="title2" placeholder="title">
+                      <input type="text" class="form-control title-pad" id="title3" placeholder="title">
+                      <button class="btn btn-primary title-pad"> submit </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

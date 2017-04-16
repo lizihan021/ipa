@@ -96,23 +96,15 @@
 </head>
 <body>
 
+<div class="row text-center" style="background-color: #87ceeb; padding-bottom: 20px;">
+        <h1> IPA Task </h1>
+        <h4> In this task you need to </h4>
+</div>
 <div class="container">
-    <div class="row">
-        
-    </div>
-    <div class="row">
-        <div class="col-sm-4 text-left">
-            <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">When the event happens</button>
-
-        </div>
-        <div class="col-sm-4 text-right" style="margin-left: 25px;">
-            <div id="showText" style="margin-top: 24px;"><p>Time since page loaded: 0 s</p></div>
-            <div id="showText2" style="margin-top: -10px;"><p>Time on video: 0 s</p></div>
-        </div>
-    </div>
+    
 
     <div class="row">
-        <div style="position:absolute;z-index:3" class="text-left">
+        <div style="position:absolute;z-index:3; left: 5%;" class="text-left">
             <img style="width:70%" src="mturk_active_task.PNG">
         </div>
         <div id="passive" >
@@ -125,13 +117,19 @@
                 </iframe>
             </div>
             <div id="to_input">
-                <div class="col-sm-5"></div>
+                <div class="col-sm-3"></div>
+                <div class="col-sm-2">
+                    <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">When the event happens</button>
+                    <div id="showText" style="margin-top: 24px; color: white;"><p>Time since page loaded: 0 s</p></div>
+                    <div id="showText2" style="margin-top: -10px; color: white;"><p>Time on video: 0 s</p></div>
+                </div>
                 <div class="col-sm-2">
                     <div class="form-group text-center">
                       <input type="text" class="form-control" id="title" placeholder="title">
                       <input type="text" class="form-control title-pad" id="title2" placeholder="title">
                       <input type="text" class="form-control title-pad" id="title3" placeholder="title">
                       <button class="btn btn-primary title-pad"> submit </button>
+                      <button class="btn btn-primary title-pad" id="interesting" style="display: inline;"> Event! </button>
                     </div>
                 </div>
             </div>

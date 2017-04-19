@@ -102,8 +102,8 @@
                 //var localTime = new Date();
                 var end = new Date().getTime();
 
-                $("#timestamp").append("<p>> People: " + $("select[name=selector]").val() + " at "
-                    + Math.ceil((end - start) / 1000) + " s</p>");
+//                $("#timestamp").append("<p>> People: " + $("select[name=selector]").val() + " at "
+//                    + Math.ceil((end - start) / 1000) + " s</p>");
                 //$("#showText").html("<p>Time since page loaded: " + Math.ceil((end - start) / 1000) + " s</p>");
             });
         });
@@ -345,9 +345,9 @@
                       <button class="btn btn-primary title-pad" id="people_update" data-toggle="tooltip" title="Click to update number of people in the room seen in video"> Update </button>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div id="timestamp"></div>
-                </div>
+                <!--<div class="col-sm-3">-->
+                    <!--<div id="timestamp"></div>-->
+                <!--</div>-->
             </div>
         </div>
     </div>

@@ -7,11 +7,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="reset.css">
+    <!--<link rel="stylesheet" type="text/css" href="reset.css">-->
+    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
+
     <style>
         #wrapper {
             width: 100%;
             overflow: visible;
+            font-family: 'Roboto', sans-serif;
         }
 
         #active {
@@ -25,76 +28,57 @@
             width: 30%;
             height: 30%;
             float: right;
-            background-color: indianred;
+            background: transparent;
             position: fixed;
             left: 70%;
         }
 
+        #description {
+            width: auto;
+            padding: 5px;
+            height: auto;
+            background-color: black;
+            float: left;
+            color: white;
+            margin: 0 0 0 5px;
+        }
         iframe {
             pointer-events: none;
         }
 
         .button {
-            -moz-box-shadow: 0px 1px 0px 0px #1c1b18;
-            -webkit-box-shadow: 0px 1px 0px 0px #1c1b18;
-            box-shadow: 0px 1px 0px 0px #1c1b18;
-            background-color: #f2e8cb;
-            -moz-border-radius: 15px;
-            -webkit-border-radius: 15px;
-            border-radius: 15px;
-            border: 2px solid #333029;
-            display: inline-block;
-            cursor: pointer;
-            color: #505739;
-            font-family: Arial;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 12px 16px;
+            background-color: black;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
             text-decoration: none;
-            text-shadow: 0px 1px 0px #ffffff;
-        }
-
-        .button:hover {
-            background-color: #ccc2a6;
-        }
-
-        .button:active {
-            position: relative;
-            top: 1px;
+            display: inline-block;
+            font-size: 16px;
+            height: auto;
+            float: left;
         }
     </style>
 
-    <script>
-        // Load the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/player_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        // Replace the 'ytplayer' element with an <iframe> and
-        // YouTube player after the API code downloads.
-        var player;
-        function onYouTubePlayerAPIReady() {
-            player = new YT.Player('ytplayer', {});
-        }
-    </script>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
 
     <script>
         $(document).ready(function () {
             $(".button").hide();
+            $("#description").hide("slow");
             var clicktime = 0;
             var start = new Date().getTime();
             var totalTime = 0;
             var toBigtime;
 
 
-            $("#passive").click(function () {
+            $("#video").click(function () {
                 if (clicktime % 2 == 0) {
                     $("#passive").animate({
                         width: "90%",
                         left: "5%",
                         right: "5%",
-                        height: "90%"
+                        height: "80%"
                     }, 500);
 
                     $("#yt").animate({
@@ -102,6 +86,7 @@
                     }, 500);
 
                     $(".button").show("slow");
+                    $("#description").show("slow");
 
                     toBigtime = new Date().getTime();
                 }
@@ -118,6 +103,7 @@
                     }, 500);
 
                     $(".button").hide("slow");
+                    $("#description").hide("slow");
 
                     var tmp = new Date().getTime();
                     totalTime += tmp - toBigtime;
@@ -142,10 +128,9 @@
                     src="https://www.youtube.com/embed/eWfkZlMIxb4?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1&amp;disablekb=1"
                     frameborder="0">
             </iframe>
-
-            <a href="#" class="button">Event</a>
-
         </div>
+        <a href="#" class="button">Event</a>
+        <div id="description"><p>Description of event</p></div>
     </div>
 </div>
 </body>

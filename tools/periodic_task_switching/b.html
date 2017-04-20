@@ -50,7 +50,7 @@
           // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
  
-      tag.src = "https://www.youtube.com/iframe_api";
+      tag.src = "https://www.youtube.com/player_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -65,12 +65,13 @@
         player = new YT.Player('player', {
           height: '390',
           width: '640',
-          videoId: 'M7lc1UVf-VE',
+          videoId: 'eWfkZlMIxb4?rel=0',
           events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
+
           },
-           playerVars:{ start: parseInt(s[1]), end: parseInt(s[2])}
+           playerVars:{ start: parseInt(s[1]), end: parseInt(s[2]), 'autoplay': 1, 'controls': 0, 'showinfo':0, 'disablekb':1}
         });
           thisplayer = player;
       }
@@ -90,24 +91,14 @@
       //    the player should play for six seconds and then stop.
       var done = false;
       function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-            
-          done = true;
+        if (event.data == YT.PlayerState.ENDED) {
+            window.close();
         }
       }
       function stopVideo() {
         player.stopVideo();
       }
 
-//        function setPlaySpeed() { 
-//                var vid = document.getElementById("yourVideo");
-//                vid.playbackRate = 2;
-//            }
-//        function settenspeed(){
-//            var vid = document.getElementById("yourVideo");
-//            vid.playbackRate = 10;
-//        }
-////    
     
     function closewindow(){
         window.close();

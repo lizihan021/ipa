@@ -15,77 +15,27 @@
 
     <script type="text/javascript">
 
-        function updateScroll(){
-            var element = document.getElementById("timestamp");
-            element.scrollTop = element.scrollHeight;
-        }
-
-        setInterval(updateScroll,500);
-
         $(document).ready(function () {
-            // Instructions expand/collapse
-            var content = $('#instructionBody');
-            var trigger = $('#collapseTrigger');
-            content.hide();
-            $('.collapse-text').text('(Click to expand)');
-            trigger.click(function () {
-                content.toggle();
-                var isVisible = content.is(':visible');
-                if (isVisible) {
-                    $('.collapse-text').text('(Click to collapse)');
-                } else {
-                    $('.collapse-text').text('(Click to expand)');
-                }
-            });
-            // end expand/collapse
-
-
-            $('[data-toggle="tooltip"]').tooltip();
             var clicktime = 0;
             var start = new Date().getTime();
             var totalTime = 0;
             var toBigtime;
-            $("#info").hide(500);
 
-            $("#video_button").click(function () {
+
+            $("#video_2").click(function () {
                 if (clicktime % 2 == 0) {
-                    $("#passive").animate({
-                        left: "0%",
-                        width: "100%",
-                        height: "75%"
-                    }, 500, function(){
-                        $("#ytplayer").animate({
-                            height: "80%"
-                        }, 300);
-                        $("#to_input").slideDown(200);
-                    });
-
-                    $("#info").show(500);
-                    $("#video_button").detach().appendTo("#button_holder");
-                    $("#video_button").html('Minimize Video');
+                    $("#video_1").animate({
+                        width: "100%"
+                    }, 500);
                     toBigtime = new Date().getTime();
                 }
                 else {
-
-                    $("#info").hide(500);
-                    $("#video_button").detach().appendTo("#passive");
-                    $("#video_button").html('Expand Video');
-
-                    $("#to_input").slideUp(200);
-                    $("#ytplayer").animate({
-                        height: "50%"
-                    }, 300, function (){
-                        $("#passive").animate({
-                            left: "75%",
-                            height: "25%",
-                            width: "20%"
-                        }, 500);
-                        
-                    });
-                    
+                    $("#video_1").animate({
+                        width: "23%"
+                    }, 500);
                     var tmp = new Date().getTime();
                     totalTime += tmp - toBigtime;
-                    $("#showText2").html("<p>Time on video: " + Math.ceil(totalTime / 1000)+ " s</p>");
+                    $("#showText2").html("<p>Time on video: " + totalTime / 1000 + " s</p>");
                 }
                 clicktime++;
             });
@@ -94,260 +44,35 @@
                 //var localTime = new Date();
                 var end = new Date().getTime();
 
-                $("#timestamp").append("<p>> Event: " + Math.ceil((end - start) / 1000) + " s</p>");
-                //$("#showText").html("<p>Time since page loaded: " + Math.ceil((end - start) / 1000) + " s</p>");
-            });
-
-            $("#people_update").click(function () {
-                //var localTime = new Date();
-                var end = new Date().getTime();
-
-//                $("#timestamp").append("<p>> People: " + $("select[name=selector]").val() + " at "
-//                    + Math.ceil((end - start) / 1000) + " s</p>");
-                //$("#showText").html("<p>Time since page loaded: " + Math.ceil((end - start) / 1000) + " s</p>");
+                console.log((end - start) / 1000);
+                $("#showText").html("<p>Time since page loaded: " + (end - start) / 1000 + " s</p>");
             });
         });
     </script>
 
-    <style>
-        #passive {
-            width: 20%;
-            height: 25%;
-            float: right;
-            position: fixed;
-            left: 75%;
-            z-index:4;
-        }
-        #to_input {
-            margin-top: -15px;
-            width: 100%;
-            height: 200px;
-            background-color: black;
-            display: none;
-        }
-        #title {
-            margin-top: 25px;
-        }
-        .title-pad {
-            margin-top: 5px;
-        }
-        #ytplayer {
-            pointer-events: none;
-        }
-        #timestamp {
-            width: 100%;
-            background-color: white;
-            overflow: scroll;
-            max-height: 100px;
-        }
-    </style>
-
-    <style type="text/css">
-
-        #collapseTrigger {
-            color: #fff;
-            display: block;
-            text-decoration: none;
-        }
-
-        #submitButton {
-            white-space: normal;
-        }
-
-        .image {
-            margin-bottom: 15px;
-        }
-
-        .radio:first-of-type {
-            margin-top: -5px;
-        }
-    </style>
-
-    <script>
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/player_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        function onYouTubePlayerAPIReady() {
-            player = new YT.Player('ytplayer', {
-                height: '100%',
-                width: '100%',
-                videoId: 'YF0vYycXNkU',  // Youtube video ID
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                },
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'showinfo': 0,
-                    'disablekb': 1,
-                    'modestbranding' : 1
-                }
-
-            });
-
-        }
-
-        function onPlayerStateChange() {
-            createCookie('ply_time', player.getCurrentTime(), 1);  // Stats like buffer, Pause and play store time in Cookes
-
-        }
-
-        function onPlayerReady() {
-            player.seekTo(readCookie('ply_time'));  // On ready get ccokies  and start vide from that.
-            player.setVolume(0);
-        }
-
-        document.unload = function() {                              // On docucment unload set cookie
-            createCookie('ply_time', player.getCurrentTime(), 1);
-        };
-
-        window.onbeforeunload = function() {              // On Window unload set cookie
-            createCookie('ply_time', player.getCurrentTime(), 1);
-        }
-
-
-        /*
-         * Start:-  function to create , read and erase Cookie
-         */
-
-        function createCookie(name, value, days) {
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                var expires = "; expires=" + date.toGMTString();
-            }
-            else
-                var expires = "";
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function readCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ')
-                    c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) == 0)
-                    return c.substring(nameEQ.length, c.length);
-            }
-            return null;
-        }
-
-        function eraseCookie(name) {
-            createCookie(name, "", -1);
-        }
-
-        /*
-         * End:-  function to create , read and erase Cookie
-         */
-    </script>
-
 </head>
 <body>
-<div class="row text-center" style="background-color: #87ceeb; padding-bottom: 20px;" id="info">
-    <div class="col-sm-7 col-sm-offset-2">
-        <h3>Event Description: Click the "Event" button whenever you see the following
-            individual enter or exit through the doorway. </h3>
-    </div>
-    <div class="col-sm-1">
-        <img height="130px" src="ashley_foster_profile-pic-thumb.jpg">
-    </div>
-</div>
 
 <div class="container">
 
+    <div class="row">
+        <div class="col-sm-2 text-left">
+            <button id="interesting" class="btn btn-primary" style="margin-top: 24px;">2x</button>
+
+        </div>
+        <div class="col-sm-3 text-left" style="margin-left: 25px;">
+            <div id="showText" style="margin-top: 24px;"><p>TIme since page loaded: 0.000 s</p></div>
+            <div id="showText2" style="margin-top: -10px;"><p>Time on video: 0.000 s</p></div>
+        </div>
+    </div>
 
     <div class="row">
-        <section id="TaggingOfAnImage">
-            <div class="col-sm-8">
-                <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="panel panel-primary">
-                            <!-- WARNING: the ids "collapseTrigger" and "instructionBody" are being used to enable expand/collapse feature --><a
-                                class="panel-heading" href="javascript:void(0);" id="collapseTrigger"><strong>Image Tagging
-                            Instructions</strong> <span class="collapse-text">(Click to expand)</span> </a>
-                            <div class="panel-body" id="instructionBody">
-                                <p>You must provide 3 tags for the main subject in this image.</p>
-
-                                <ul>
-                                    <li>Each tag must be a single word.</li>
-                                    <li>No tag can be longer than 25 characters.</li>
-                                    <li>The tags must describe the image, the contents of the image, or some relevant context.
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row" id="workContent">
-                    <div class="col-xs-12 col-sm-8 image">
-                        <img alt="image_url" class="img-responsive center-block"
-                             src="${image_url}"/>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-4 fields">
-                        <div class="form-group">
-                            <label for="tag1">Tag 1:</label>
-                            <input class="form-control" id="tag1"
-                                   name="tag1"
-                                   required="" size="30" type="text"/>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tag2">Tag 2:</label>
-                            <input class="form-control" id="tag2"
-                                   name="tag2"
-                                   required="" size="30" type="text"/>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tag3">Tag 3:</label>
-                            <input class="form-control" id="tag3"
-                                   name="tag3"
-                                   required="" size="30" type="text"/>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-        </section>
-        <div id="passive" >
-
-            <div id="ytplayer">
-            </div>
-
-            <button id="video_button" data-toggle="tooltip" title="Click to toggle video size">Expand Video</button>
-
-            <div id="to_input">
-                <div class="col-sm-2 col-sm-offset-1" id="button_holder">
-            </div>
-                <div class="col-sm-2">
-                    <button data-toggle="tooltip" title="Click this button when the event described above occurs"
-                            id="interesting" class="btn btn-primary" style="margin-top: 25px;">Event</button>
-                    <div id="showText2" style="margin-top: 10px; color: white;"><p>Time on video: 0 s</p></div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group text-center">
-                      <label style="margin-top: 25px; color: white;" for="sel1">Number of people in room:</label>
-                          <select class="form-control" id="sel1" name="selector">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                          </select>
-                      <button class="btn btn-primary title-pad" id="people_update" data-toggle="tooltip" title="Click to update number of people in the room seen in video"> Update </button>
-                    </div>
-                </div>
-                <!--<div class="col-sm-3">-->
-                    <!--<div id="timestamp"></div>-->
-                <!--</div>-->
+        <div style="position:absolute;z-index:3" class="text-left">
+            <img style="width:70%" src="mturk_active_task.PNG">
+        </div>
+        <div id="video_2" style="position:absolute;z-index:4" class="text-right">
+            <div class="col-sm-11">
+                <img id="video_1" style="width:23%" src="mturk_vid_next.PNG">
             </div>
         </div>
     </div>

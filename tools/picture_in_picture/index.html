@@ -13,6 +13,7 @@
     <!-- Latest compiled JavaScript {{ url_for('video_feed') }}-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+    <!-- js for passive task anination-->
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -20,7 +21,6 @@
             var start = new Date().getTime();
             var totalTime = 0;
             var toBigtime;
-
 
             $("#waper").click(function () {
                 if (clicktime % 2 == 0) {
@@ -63,10 +63,45 @@
 
                 $("#showText").html("<p>Time since page loaded: " + Math.ceil((end - start) / 1000) + " s</p>");
             });
+
+            var playFlag = 0;
+            var audio = document.getElementById("audio");
+            var VolOffFlag = 0;
+	    	$("#play").click(function () {
+	    		if(playFlag == 1) {
+	    			return;
+	    		}
+	    		audioURL = "2.mp3";
+	    		$("#audio").attr("src", audioURL);
+				audio.play();
+	    		playFlag = 1;
+	    		$("#play").css("color", "gray");
+	    		$("#audio").bind("ended",function () {
+	    			playFlag = 0;
+	    			$("#play").css("color", "black");
+				});
+	    	});
+	    	$("#volume-off").click(function (){
+	    		if(VolOffFlag){
+	    			audio.muted = false;
+	    			VolOffFlag = 0;
+	    			$("#volume-off").css("color", "black");
+	    		}
+	    		else{
+	    			audio.muted = true;
+	    			VolOffFlag = 1;
+	    			$("#volume-off").css("color", "gray");
+	    		}
+	    	});
+
         });
     </script>
 
+    <!-- style-->
     <style>
+    	#audio {
+    		margin-top: 20px;
+    	}
         #passive {
             width: 20%;
             height: 25%;
@@ -88,6 +123,12 @@
         .title-pad {
             margin-top: 5px;
         }
+        .audio-control {
+        	margin-right: 20px;
+        }
+        .audio-control:hover {
+        	color: dimgrey;
+        }
         iframe {
             pointer-events: none;
         } 
@@ -98,14 +139,29 @@
 
 <div class="row text-center" style="background-color: #87ceeb; padding-bottom: 20px;">
         <h1> IPA Task </h1>
-        <h4> In this task you need to </h4>
+        <h4> Here we can put some instruction.</h4>
 </div>
 <div class="container">
     
 
     <div class="row">
-        <div style="position:absolute;z-index:3; left: 5%;" class="text-left">
-            <img style="width:70%" src="mturk_active_task.PNG">
+        <div style="position:absolute;z-index:2; left: 5%;" class="text-center col-sm-3">
+        	<h3>Your instruction goes here.</h3>
+            <audio id="audio" style="display: none;">
+				<source type="audio/mpeg">
+				Your browser does not support the audio element.
+			</audio>
+			<h3>
+				<span class="glyphicon glyphicon-play audio-control" id="play"></span>
+				<span class="glyphicon glyphicon-volume-up audio-control" id="volume-up"></span>
+				<span class="glyphicon glyphicon-volume-down audio-control" id="volume-down"></span>
+				<span class="glyphicon glyphicon-volume-off audio-control" id="volume-off"></span>
+			</h3>
+        </div>
+        <div style="position:absolute;z-index:3; left: 35%;" class="text-center col-sm-4">
+        	<h3>User input goes here.</h3>
+        	<textarea type="text" class="form-control" rows="5" id="title4" 
+                                placeholder="Describe yourself here..." style="margin-top: 25px; display: block;"> </textarea>
         </div>
         <div id="passive" >
             <div id="waper">
@@ -132,13 +188,15 @@
                             <option>3</option>
                             <option>4</option>
                           </select>
+                          <textarea type="text" class="form-control" rows="5" id="title4" 
+                                placeholder="Describe yourself here..." style="margin-top: 25px; display: none;"> </textarea>
                       <button class="btn btn-primary title-pad"> submit </button>
                       <button class="btn btn-primary title-pad" id="interesting" style="display: inline;"> Event! </button>
                     </div>
+
                 </div>
                 <div class="col-sm-2">
-                    <textarea type="text" class="form-control" rows="5" id="title4" 
-                                placeholder="Describe yourself here..." style="margin-top: 25px;"> </textarea>
+                    <p style="color: white;margin-top: 25px;"> Lorem episum</p>
                 </div>
             </div>
         </div>

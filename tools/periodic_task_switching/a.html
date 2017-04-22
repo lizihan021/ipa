@@ -47,11 +47,6 @@ task {
 
 </style>
 
-<header>
-<h1>IPA Platform</h1>
-<p>Worker Name: Varun</p>
-</header>
-
 
 <main>
     <p>TIME </p>
@@ -100,7 +95,7 @@ body{
         }
         #myDIV {
             width: 30%;
-            height: 60%;
+            height: 100%;
             float: right;
             background-color: lightsteelblue;
             position: fixed;
@@ -114,8 +109,6 @@ body{
 
 <div id="myDIV" class="header">
 <!--  <button id="videobutton" onclick="window.open('./b.html')" type="button">Click here to view live feed</button><br>-->
-    
-    
 </div>
 
 <script>
@@ -123,44 +116,25 @@ body{
 $("document").ready(function(){
 
     var ii = 0;
-    var alert_period = 60; // Seconds until alert
+    var alert_period = 6000; // Seconds until alert
     var start = new Date().getTime(); 
     var c=0
     var t
     var prev = 0;
     
     
-//    function timedCount()
-//    {
-//    document.getElementById('txt').value=c
-//    c=c+1
-//    console.log("dd")
-//    t=setTimeout("timedCount()",1000)
-//    }
-//    
-//    timedCount();
-
-    // Append alert message to "alerts" div
     function alert() {
-//        $("#myDIV").append("<div id='alert"+ii+"'><a href='#' class='button' >Video "+ii+"</a></div>");
         var appstring = "clickfunc()";
         $("#myDIV").append("<button id='videobutton"+ii+"' onclick="+appstring+"class='new' type='button'>ALERT "+ii+"</button><br>");
         var thisbutton = document.getElementById("videobutton"+ii);
         thisbutton.onclick = function(){
-           // console.log("sdfsdffds");
-            //window.open('./b.html');
             window.open("b.html?test="+prev+"="+timenow/1000);
             prev = timenow/1000;
             this.style.color = "red";
             this.innerHTML = "Checked at" + timenow/1000 + "s"
+            $(this).remove();
         }
-//        $("#mybutton").click(function(){
-//        console.log("click ")
-//          })
         ii++;
-        
-
-//        var thisbutton = document.getElementById("alert"+ii);
     }
     var timenow;
     function time(){
@@ -172,11 +146,10 @@ $("document").ready(function(){
         
     }
     setInterval(time,100);
-    
-    // Send alert message every 60 seconds
+
     setInterval(function(){
         alert();
-    }, alert_period * 30);
+    }, alert_period * 10);
     
 
 // Create a "close" button and append it to each list item

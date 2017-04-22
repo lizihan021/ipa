@@ -67,11 +67,18 @@
             var playFlag = 0;
             var audio = document.getElementById("audio");
             var VolOffFlag = 0;
+
+            function getAudioURL(lastTimeUrl){
+            	// should generate a URL to the audio
+            	// the url generated should be different from lastTimeUrl
+            	return "2.mp3";
+            }
+
 	    	$("#play").click(function () {
 	    		if(playFlag == 1) {
 	    			return;
 	    		}
-	    		audioURL = "2.mp3";
+	    		audioURL = getAudioURL($("#audio").attr("src"));
 	    		$("#audio").attr("src", audioURL);
 				audio.play();
 	    		playFlag = 1;
@@ -93,7 +100,16 @@
 	    			$("#volume-off").css("color", "gray");
 	    		}
 	    	});
-
+	    	$("#volume-up").click(function (){
+	    		if(audio.volume + 0.1 < 1){
+	    			audio.volume+=0.1;
+	    		}
+	    	});
+	    	$("#volume-down").click(function (){
+	    		if(audio.volume - 0.1 > 0){
+	    			audio.volume-=0.1;
+	    		}
+	    	});
         });
     </script>
 
@@ -147,8 +163,8 @@
     <div class="row">
         <div style="position:absolute;z-index:2; left: 5%;" class="text-center col-sm-3">
         	<h3>Your instruction goes here.</h3>
-            <audio id="audio" style="display: none;">
-				<source type="audio/mpeg">
+        	<p> When the audio is finished, play button will active again</p>
+            <audio src="" id="audio" type="audio/mpeg" style="display: none;">
 				Your browser does not support the audio element.
 			</audio>
 			<h3>
@@ -161,7 +177,8 @@
         <div style="position:absolute;z-index:3; left: 35%;" class="text-center col-sm-4">
         	<h3>User input goes here.</h3>
         	<textarea type="text" class="form-control" rows="5" id="title4" 
-                                placeholder="Describe yourself here..." style="margin-top: 25px; display: block;"> </textarea>
+                      placeholder="Describe yourself here..." 
+                      style="margin-top: 25px; display: block; max-width: 100%"> </textarea>
         </div>
         <div id="passive" >
             <div id="waper">

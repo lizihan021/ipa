@@ -1,0 +1,157 @@
+<head>
+    <title>Picture in Picture Tool</title>
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script src="active_task.js"></script>
+    <script src="passive_task.js"></script>
+    <script>
+        console.log(Meteor.userId());
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/player_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubePlayerAPIReady() {
+            player = new YT.Player('ytplayer', {
+                height: '100%',
+                width: '100%',
+                videoId: 'YF0vYycXNkU',  // Youtube video ID
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                },
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'showinfo': 0,
+                    'disablekb': 1,
+                    'modestbranding' : 1,
+                    'rel': 0
+                }
+
+            });
+
+        }
+
+        function onPlayerStateChange() {
+            createCookie('ply_time', player.getCurrentTime(), 1);  // Stats like buffer, Pause and play store time in Cookes
+
+        }
+
+        function onPlayerReady() {
+            player.seekTo(readCookie('ply_time'));  // On ready get ccokies  and start vide from that.
+            player.setVolume(0);
+        }
+
+        document.unload = function() {                              // On docucment unload set cookie
+            createCookie('ply_time', player.getCurrentTime(), 1);
+        };
+
+        window.onbeforeunload = function() {              // On Window unload set cookie
+            createCookie('ply_time', player.getCurrentTime(), 1);
+        }
+
+
+    </script>
+
+
+    <link rel="stylesheet" type="text/css" href="event_style.css">
+
+</head>
+<body>
+
+<div class="row text-center" id="info">
+    <div class="col-sm-7 col-sm-offset-2">
+        <h3 class="well">Event Description: Click the "Event" button whenever you see the following
+            individual enter or exit through the doorway. </h3>
+    </div>
+    <div class="col-sm-1">
+        <img height="130px" src="ashley_foster_profile-pic-thumb.jpg">
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+        <section id="TaggingOfAnImage">
+            <div class="col-sm-8">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="panel panel-primary">
+                            <!-- WARNING: the ids "collapseTrigger" and "instructionBody" are being used to enable expand/collapse feature --><a
+                                class="panel-heading" href="javascript:void(0);" id="collapseTrigger"><strong>Image
+                            Tagging
+                            Instructions</strong> <span class="collapse-text">(Click to expand)</span> </a>
+                            <div class="panel-body" id="instructionBody">
+                                <p>You must provide 3 tags for the main subject in this image.</p>
+
+                                <ul>
+                                    <li>Each tag must be a single word.</li>
+                                    <li>No tag can be longer than 25 characters.</li>
+                                    <li>The tags must describe the image, the contents of the image, or some relevant
+                                        context.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="workContent">
+                    <div class="col-xs-12 col-sm-8 image">
+                        <img id="active_task_image" alt="image_url" class="img-responsive center-block"
+                             src=""/>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-4 fields">
+
+                        <form id="tag_submit">
+                            <input type="text" name="tag1" label="Tag 1">
+                            <input type="text" name="tag2" label="Tag 2">
+                            <input type="text" name="tag3" label="Tag 3">
+                            <input type="submit" name="tag_submit">
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <div id="passive">
+
+            <div id="ytplayer">
+            </div>
+
+            <button id="video_button" data-toggle="tooltip" title="Click to toggle video size">Expand Video</button>
+
+            <div id="to_input">
+                <div class="col-sm-2 col-sm-offset-2" id="button_holder" style="margin-top: 25px">
+                </div>
+                <div class="col-sm-3">
+                    <button data-toggle="tooltip" title="Click this button when the event described above occurs"
+                            id="event_button" class="btn btn-primary" style="margin-top: 25px;">Event
+                    </button>
+                </div>
+
+                <!--<div class="col-sm-3">-->
+                <!--<div id="timestamp"></div>-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+</body>

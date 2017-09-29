@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<html>
+<head>
+  <title>Video Streaming Demonstration</title>
+  <!-- Bootstrap -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+
+  <div class="container">
+    <div class="row">
+      <h1>Video Streaming Demonstration</h1>
+    </div>
+    <div class="row">
+      <img id="video_1" style="width:100px" src="{{ url_for('video_feed') }}">
+    </div>
+  </div>
+
+</body>
+</html>

@@ -4,8 +4,8 @@ import numpy as np
 import sys
 import socket
 
-# import freenect
-# import cv2
+import freenect
+import cv2
 
 app = Flask(__name__, template_folder='templates')
 

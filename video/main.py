@@ -4,8 +4,8 @@ import numpy as np
 import sys
 import socket
 
-import freenect
-import cv2
+# import freenect
+# import cv2
 
 app = Flask(__name__, template_folder='templates')
 
@@ -32,7 +32,8 @@ if __name__ == '__main__':
     # Try to connect the ip server
     port = 3000
     try:
-        client = MongoClient("mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot")
+        client = MongoClient("mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot",\
+                            serverSelectionTimeoutMS=3000)
         db = client.ipa_robot
         commands = db.commands
     except:
@@ -46,6 +47,7 @@ if __name__ == '__main__':
     s.close()
     print "ip:", robot_ip
     # try to put ip on the server
+    print("Try to put ip on the server")
     try:
         commands.insert_one({
             '_id': 1,
@@ -54,14 +56,17 @@ if __name__ == '__main__':
             'message': str(robot_ip)+":"+str(port)
         })
     except:
-        commands.update_one(
-            {'_id': 1},
-            {
-                '$set':{
-                    'message': str(robot_ip)+":"+str(port)
+        try:
+            commands.update_one(
+                {'_id': 1},
+                {
+                    '$set':{
+                        'message': str(robot_ip)+":"+str(port)
+                    }
                 }
-            }
-        )
+            )
+        except:
+            print("fail to put ip on server.")
 
-
-    app.run(host='0.0.0.0', port=port, threaded=True)
+    print("Trying to start server")
+    app.run(host="0.0.0.0", port=port, threaded=True)

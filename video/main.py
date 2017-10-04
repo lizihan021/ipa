@@ -13,6 +13,7 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
+
 def gen():
     while True:
         array,_ = freenect.sync_get_video()

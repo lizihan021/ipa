@@ -44,12 +44,17 @@ def sendCommand(serial, input):
         cmd += chr(int(nums))
     serial.write(cmd)
 
+def move_descret(command):
+    sendCommand(ser, command_dict[command])
+    time.sleep(0.4)
+    sendCommand(ser, command_dict['SPACE'])
+    return ''
+
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 def gen():
     while True:
@@ -68,28 +73,23 @@ def video_feed():
 
 @app.route('/control/up')
 def control_up():
-    sendCommand(ser, command_dict['UP'])
-    time.sleep(0.4)
-    sendCommand(ser, command_dict['SPACE'])
-    return ''
+    return move_descret('UP')
 @app.route('/control/down')
 def control_down():
-    sendCommand(ser, command_dict['DOWN'])
-    return ''
+    return move_descret('DOWN')
 @app.route('/control/right')
 def control_right():
-    sendCommand(ser, command_dict['RIGHT'])
-    return ''
+    return move_descret('RIGHT')
 @app.route('/control/left')
 def control_left():
-    sendCommand(ser, command_dict['LEFT'])
-    return ''
+    return move_descret('LEFT')
 @app.route('/control/reset')
 def control_reset():
     ser = serial.Serial('/dev/ttyUSB0', 115200)
     sendCommand(ser, command_dict['P'])
     sendCommand(ser, command_dict['S'])
     sendCommand(ser, command_dict['B'])
+    time.sleep(0.4)
     return ''
 @app.route('/control/stop')
 def control_stop():

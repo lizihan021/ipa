@@ -38,5 +38,8 @@ command_dict = \
 	'SPACE': '145 0 0 0 0'
 }
 
+ser = serial.Serial('/dev/ttyUSB0', 115200)
+
+sendCommand(ser, command_dict['UP'])
 
 print 'HI'

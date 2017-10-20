@@ -41,7 +41,8 @@ command_dict = \
 ser = serial.Serial('/dev/ttyUSB0', 115200)
 
 sendCommand(ser, command_dict['P'])
-sendCommand(ser, command_dict['UP'])
+sendCommand(ser, command_dict['S'])
 sendCommand(ser, command_dict['B'])
+sendCommand(ser, command_dict['UP'])
 
 print 'HI'

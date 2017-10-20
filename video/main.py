@@ -73,16 +73,31 @@ def control_up():
     sendCommand(ser, command_dict['SPACE'])
     return ''
 @app.route('/control/down')
-def control_up():
+def control_down():
     sendCommand(ser, command_dict['DOWN'])
     return ''
 @app.route('/control/right')
-def control_up():
+def control_right():
     sendCommand(ser, command_dict['RIGHT'])
     return ''
 @app.route('/control/left')
-def control_up():
+def control_left():
     sendCommand(ser, command_dict['LEFT'])
+    return ''
+@app.route('/control/reset')
+def control_reset():
+    ser = serial.Serial('/dev/ttyUSB0', 115200)
+    sendCommand(ser, command_dict['P'])
+    sendCommand(ser, command_dict['S'])
+    sendCommand(ser, command_dict['B'])
+    return ''
+@app.route('/control/stop')
+def control_stop():
+    sendCommand(ser, command_dict['SPACE'])
+    return ''
+@app.route('/control/beep')
+def control_beep():
+    sendCommand(ser, command_dict['B'])
     return ''
 
 if __name__ == '__main__':

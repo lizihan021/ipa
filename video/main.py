@@ -5,7 +5,7 @@ import socket
 
 import freenect
 import cv2
-import sys, serial
+import sys, serial, time
 
 helpText = """\
 Supported Keys:
@@ -69,9 +69,21 @@ def video_feed():
 @app.route('/control/up')
 def control_up():
     sendCommand(ser, command_dict['UP'])
-    # ser = getattr(g, '_serial', None)
+    time.sleep(0.4)
+    sendCommand(ser, command_dict['SPACE'])
     return ''
-
+@app.route('/control/down')
+def control_up():
+    sendCommand(ser, command_dict['DOWN'])
+    return ''
+@app.route('/control/right')
+def control_up():
+    sendCommand(ser, command_dict['RIGHT'])
+    return ''
+@app.route('/control/left')
+def control_up():
+    sendCommand(ser, command_dict['LEFT'])
+    return ''
 
 if __name__ == '__main__':
     # Try to connect the ip server
@@ -118,7 +130,6 @@ if __name__ == '__main__':
     sendCommand(ser, command_dict['P'])
     sendCommand(ser, command_dict['S'])
     sendCommand(ser, command_dict['B'])
-    # setattr(g, '_serial', ser)
 
     print("Trying to start server:")
     app.run(host="0.0.0.0", port=port, threaded=True)

@@ -44,5 +44,6 @@ sendCommand(ser, command_dict['P'])
 sendCommand(ser, command_dict['S'])
 sendCommand(ser, command_dict['B'])
 sendCommand(ser, command_dict['UP'])
+sendCommand(ser, command_dict['SPACE'])
 
 print 'HI'

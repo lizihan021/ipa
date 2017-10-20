@@ -70,6 +70,7 @@ def video_feed():
 def control_up():
     sendCommand(ser, command_dict['UP'])
     # ser = getattr(g, '_serial', None)
+    return ''
 
 
 if __name__ == '__main__':

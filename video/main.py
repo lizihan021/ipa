@@ -1,11 +1,48 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, g
 from pymongo import MongoClient
 import numpy as np
-import sys
 import socket
 
 import freenect
 import cv2
+import sys, serial
+
+helpText = """\
+Supported Keys:
+p\tPassive
+s\tSafe
+f\tFull
+c\tClean
+d\tDock
+r\tReset
+b\tBeep
+Space\tStop
+Arrows\tMotion -- Toggle based
+
+If nothing happens after you connect, 
+try pressing 'P' and then 'S' to get into safe mode.
+"""
+
+command_dict = \
+{
+    'UP': '145 1 244 1 244',
+    'DOWN': '145 254 44 254 44',
+    'LEFT': '145 0 200 255 56',
+    'RIGHT': '145 255 56 0 200',
+    'P': '128',
+    'S': '131',
+    'F': '132',
+    'R': '7',
+    'D': '143',
+    'B': '140 3 1 64 16 141 3',
+    'SPACE': '145 0 0 0 0'
+}
+
+def sendCommand(serial, input):
+    cmd = ''
+    for nums in input.split():
+        cmd += chr(int(nums))
+    serial.write(cmd)
 
 app = Flask(__name__, template_folder='templates')
 
@@ -28,6 +65,12 @@ def gen():
 def video_feed():
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/control/up')
+def control_up():
+    sendCommand(ser, command_dict['UP'])
+    # ser = getattr(g, '_serial', None)
+
 
 if __name__ == '__main__':
     # Try to connect the ip server
@@ -69,5 +112,15 @@ if __name__ == '__main__':
         except:
             print("fail to put ip on server.")
 
-    print("Trying to start server")
+    print("Trying to start serial:")
+    ser = serial.Serial('/dev/ttyUSB0', 115200)
+    sendCommand(ser, command_dict['P'])
+    sendCommand(ser, command_dict['S'])
+    sendCommand(ser, command_dict['B'])
+    # setattr(g, '_serial', ser)
+
+    print("Trying to start server:")
     app.run(host="0.0.0.0", port=port, threaded=True)
+
+
+

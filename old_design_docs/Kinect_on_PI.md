@@ -28,5 +28,9 @@ this tutorial: http://www.mariolukas.de/2015/04/proof-of-concept-3d-scanner-with
 - after make and installation navigate to `wrappers/python` of the libfreenect main directory
 - `sudo python setup.py install`
 
+
+
+Please just follow https://naman5.wordpress.com/2014/06/24/experimenting-with-kinect-using-opencv-python-and-open-kinect-libfreenect/ 
+
 ## Audio
 Older models of the Kinect (before 1473) should work out of the box. 1473 requires firmware to be loaded to the Kinect using a script named `fwfetcher.py`. We are still working on this part of the tutorial

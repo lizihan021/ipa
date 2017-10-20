@@ -16,13 +16,6 @@ If nothing happens after you connect,
 try pressing 'P' and then 'S' to get into safe mode.
 """
 
-def sendCommand(serial, input):
-    cmd = ''
-    for nums in input.split():
-        cmd += chr(int(nums))
-
-    serial.write(cmd)
-
 command_dict = \
 {
 	'UP': '145 1 244 1 244',
@@ -37,6 +30,13 @@ command_dict = \
 	'B': '140 3 1 64 16 141 3',
 	'SPACE': '145 0 0 0 0'
 }
+
+def sendCommand(serial, input):
+    cmd = ''
+    for nums in input.split():
+        cmd += chr(int(nums))
+    serial.write(cmd)
+
 
 ser = serial.Serial('/dev/ttyUSB0', 115200)
 

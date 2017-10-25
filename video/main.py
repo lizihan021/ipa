@@ -22,7 +22,7 @@ Arrows\tMotion -- Toggle based
 If nothing happens after you connect, 
 try pressing 'P' and then 'S' to get into safe mode.
 """
-
+# control code that will be send to robot 
 command_dict = \
 {
     'UP': '145 1 244 1 244',
@@ -37,25 +37,26 @@ command_dict = \
     'B': '140 3 1 64 16 141 3',
     'SPACE': '145 0 0 0 0'
 }
-
+# send commands to robot through serial
 def sendCommand(serial, input):
     cmd = ''
     for nums in input.split():
         cmd += chr(int(nums))
     serial.write(cmd)
-
+# move the robot in a period of time
 def move_descret(command):
     sendCommand(ser, command_dict[command])
     time.sleep(0.4)
     sendCommand(ser, command_dict['SPACE'])
     return ''
-
+# the server app
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# get video stream 
 def gen():
     while True:
         array,_ = freenect.sync_get_video()
@@ -68,8 +69,7 @@ def gen():
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/control/up')
 def control_up():
@@ -145,6 +145,7 @@ if __name__ == '__main__':
     sendCommand(ser, command_dict['P'])
     sendCommand(ser, command_dict['S'])
     sendCommand(ser, command_dict['B'])
+    print("success!")
 
     print("Trying to start server:")
     app.run(host="0.0.0.0", port=port, threaded=True)

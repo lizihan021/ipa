@@ -46,8 +46,8 @@ def sendCommand(serial, input):
 # move the robot in a period of time
 def move_descret(command):
     sendCommand(ser, command_dict[command])
-    time.sleep(0.4)
-    sendCommand(ser, command_dict['SPACE'])
+    # time.sleep(0.4)
+    # sendCommand(ser, command_dict['SPACE'])
     return ''
 # the server app
 app = Flask(__name__, template_folder='templates')

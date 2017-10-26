@@ -142,13 +142,13 @@ if __name__ == '__main__':
 
     print("Trying to start serial:")
     try:
-	    ser = serial.Serial('/dev/ttyUSB0', 115200)
-	    sendCommand(ser, command_dict['P'])
-	    sendCommand(ser, command_dict['S'])
-	    sendCommand(ser, command_dict['B'])
-	    print("Success!")
-	except:
-		print("Fail to find robot!")
+        ser = serial.Serial('/dev/ttyUSB0', 115200)
+        sendCommand(ser, command_dict['P'])
+        sendCommand(ser, command_dict['S'])
+        sendCommand(ser, command_dict['B'])
+        print("Success!")
+    except:
+        print("Fail to find robot!")
 
     print("Trying to start server:")
     app.run(host="0.0.0.0", port=port, threaded=True)

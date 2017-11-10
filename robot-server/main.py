@@ -59,13 +59,17 @@ def index():
 # get video stream 
 def gen():
     while True:
-        array,_ = freenect.sync_get_video()
-        array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
-        output = array
-        ret, jpeg = cv2.imencode('.jpg',output)
-        frame = jpeg.tostring()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        try:
+            array,_ = freenect.sync_get_video()
+            array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
+            output = array
+            ret, jpeg = cv2.imencode('.jpg',output)
+            frame = jpeg.tostring()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        except:
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + b'\r\n\r\n')
 
 @app.route('/video_feed')
 def video_feed():

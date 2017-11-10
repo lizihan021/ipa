@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response, g
 from pymongo import MongoClient
 import numpy as np
 import socket
+import urllib2
 
 import freenect
 import cv2
@@ -101,16 +102,11 @@ def control_beep():
     return ''
 
 if __name__ == '__main__':
-    # Try to connect the ip server
+    #####
+    robot_id = 1
+    #####
+    # for insertion.
     port = 3000
-    try:
-        client = MongoClient("mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot",\
-                            serverSelectionTimeoutMS=3000)
-        db = client.ipa_robot
-        commands = db.commands
-    except:
-        print("Unable to connect to database")
-        sys.exit()
 
     # Try to get local ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -121,24 +117,9 @@ if __name__ == '__main__':
     # try to put ip on the server
     print("Try to put ip on the server")
     try:
-        commands.insert_one({
-            '_id': 1,
-            'type': 'robot',
-            'command': '131',
-            'message': str(robot_ip)+":"+str(port)
-        })
+        urllib2.urlopen("www.sjtusaa.website/setip/"+robot_id+'/'+robot_ip)
     except:
-        try:
-            commands.update_one(
-                {'_id': 1},
-                {
-                    '$set':{
-                        'message': str(robot_ip)+":"+str(port)
-                    }
-                }
-            )
-        except:
-            print("Fail to put ip on server.")
+        print("Fail to put ip on server.")
 
     print("Trying to start serial:")
     try:

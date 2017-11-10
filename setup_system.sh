@@ -27,4 +27,7 @@ SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02be", MODE="0666"
 # ATTR{product}=="Xbox NUI Motor" 
 SUBSYSTEM=="usb", ATTR{idVendor}=="045e", ATTR{idProduct}=="02bf", MODE="0666"' > /etc/udev/rules.d/51-kinect.rules
 cd ../../
-git clone https://github.com/lizihan021/ipa
+echo "Set a robot id (should be an int > 0): "
+read answer
+line="	robot_id = $answer "
+printf '%s\n' H 106i "$line" . wq | ed -s robot-server/main.py

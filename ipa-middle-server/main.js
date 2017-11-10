@@ -22,15 +22,15 @@ function send_ajax_request(robot_id, uri){
       fetch("http://" + row['ip'] + uri, { credentials: 'same-origin' })
         .then((response)=>{
           if (!response.ok) throw Error(response.statusText);
-          console.log("response")
+          // console.log("response")
           return response.json();
         })
         .then((data)=>{
-          console.log("no response")
+          // console.log("no response")
         })
         .catch((error) => {
           // delete ip
-          console.log(error)
+          // console.log(error)
         });
     }
   });
@@ -41,7 +41,7 @@ function insert_robot_ip(id, ip, res){
   let query = "SELECT ip FROM robots WHERE robotid=" + id;
   let update_query = "UPDATE robots SET ip='" + ip + "' WHERE robotid=" + id ;
   let insert_query = "INSERT INTO robots(ip, robotid) VALUES ('" + ip + "', " + id + ");"
-  console.log(insert_query)
+  // console.log(insert_query)
   db.get(query, function(err, row){
     if (row){
       db.run(update_query)
@@ -70,7 +70,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/robot/:id', function(req, res){
-  console.log("Accessed robot with id: " + req.params.id)
+  // console.log("Accessed robot with id: " + req.params.id)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT ip FROM robots WHERE robotid=" + req.params.id;
 
@@ -86,17 +86,17 @@ app.get('/robot/:id', function(req, res){
 })
 // xxx TODO: vulnerble to SQL inject
 app.get('/robot/:id/:control', function(req, res){
-  console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
+  // console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
   send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
 });
 
 app.get('/setip/:id/:ip', function(req, res){
-  console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
+  // console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
   insert_robot_ip(req.params.id, req.params.ip, res)
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+  // console.log('Example app listening on port 3000!')
 })
 
 db.close();

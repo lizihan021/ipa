@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+export NODE_PATH=/Users/menggaole/Desktop/opensource/research/ipa_middle_server/env/lib/node_modules
+export NPM_CONFIG_PREFIX=/Users/menggaole/Desktop/opensource/research/ipa_middle_server/env
+export npm_config_prefix=/Users/menggaole/Desktop/opensource/research/ipa_middle_server/env
+exec /Users/menggaole/Desktop/opensource/research/ipa_middle_server/env/bin/node "$@"

@@ -1,0 +1,36 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<div class="container">
+	<h1>The Control Interface (Ugly Version)</h1>
+	<div>
+	    <a href="/robot/<%= robot_num %>/up/"><p>up</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/down/"><p>down</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/left/"><p>left</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/right/"><p>right</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/beep/"><p>beep</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/stop/"><p>stop</p>
+	</div>
+	<div>
+	    <a href="/robot/<%= robot_num %>/reset/"><p>reset</p>
+	</div>
+	<div>
+	    <a href="/"><p>Back to home</p>
+	</div>
+</div>
+
+<iframe style="width:600px;height:500px;" frameborder="0" src="http://35.0.28.230:3000/video_feed"></iframe>

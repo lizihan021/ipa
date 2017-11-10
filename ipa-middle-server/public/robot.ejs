@@ -11,17 +11,14 @@ $( document ).ready(function() {
     $("#down").mousedown(()=>{send_csrf("down")});
     $("#left").mousedown(()=>{send_csrf("left")});
     $("#right").mousedown(()=>{send_csrf("right")});
-    $("#beep").mousedown(()=>{send_csrf("beep")});
-    $("#stop").mousedown(()=>{send_csrf("stop")});
-    $("#reset").mousedown(()=>{send_csrf("reset")});
-    
+    $("#beep").click(()=>{send_csrf("beep")});
+    $("#stop").click(()=>{send_csrf("stop")});
+    $("#reset").click(()=>{send_csrf("reset")});
+
     $("#up").mouseup(()=>{send_csrf("stop")});
     $("#down").mouseup(()=>{send_csrf("stop")});
     $("#left").mouseup(()=>{send_csrf("stop")});
     $("#right").mouseup(()=>{send_csrf("stop")});
-    $("#beep").mouseup(()=>{send_csrf("stop")});
-    $("#stop").mouseup(()=>{send_csrf("stop")});
-    $("#reset").mouseup(()=>{send_csrf("stop")});
 });
 
 function send_csrf(command){

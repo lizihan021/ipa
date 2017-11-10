@@ -19,18 +19,19 @@ function send_ajax_request(robot_id, uri){
 
   db.get(query, function(err, row){
     if(row){
+      console.log("http://" + row['ip'] + uri)
       fetch("http://" + row['ip'] + uri, { credentials: 'same-origin' })
         .then((response)=>{
           if (!response.ok) throw Error(response.statusText);
-          // console.log("response")
+          console.log("response")
           return response.json();
         })
         .then((data)=>{
-          // console.log("no response")
+          console.log("no response")
         })
         .catch((error) => {
           // delete ip
-          // console.log(error)
+          console.log(error)
         });
     }
   });

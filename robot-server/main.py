@@ -64,6 +64,7 @@ def gen():
         output = array
         ret, jpeg = cv2.imencode('.jpg',output)
         frame = jpeg.tostring()
+        freenect.sync_stop()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 

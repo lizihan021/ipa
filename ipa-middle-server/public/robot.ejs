@@ -7,13 +7,13 @@
 
 <script type="text/javascript">
 $( document ).ready(function() {
-    $("#up").click(send_csrf("up"));
-    $("#down").click(send_csrf("down"));
-    $("#left").click(send_csrf("left"));
-    $("#right").click(send_csrf("right"));
-    $("#beep").click(send_csrf("beep"));
-    $("#stop").click(send_csrf("stop"));
-    $("#reset").click(send_csrf("reset"));
+    $("#up").click(()=>{send_csrf("up")});
+    $("#down").click(()=>{send_csrf("down")});
+    $("#left").click(()=>{send_csrf("left")});
+    $("#right").click(()=>{send_csrf("right")});
+    $("#beep").click(()=>{send_csrf("beep")});
+    $("#stop").click(()=>{send_csrf("stop")});
+    $("#reset").click(()=>{send_csrf("reset")});
 });
 
 function send_csrf(command){

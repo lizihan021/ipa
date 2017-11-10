@@ -116,7 +116,7 @@ if __name__ == '__main__':
     # try to put ip on the server
     print("Try to put ip on the server")
     try:
-        urllib2.urlopen("www.sjtusaa.website/setip/"+robot_id+'/'+robot_ip)
+        urllib2.urlopen("http://www.sjtusaa.website/setip/"+robot_id+'/'+robot_ip)
     except:
         print("Fail to put ip on server.")
 

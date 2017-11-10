@@ -1,5 +1,4 @@
 from flask import Flask, render_template, Response, g
-from pymongo import MongoClient
 import numpy as np
 import socket
 import urllib2

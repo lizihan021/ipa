@@ -1,0 +1,95 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var request = new XMLHttpRequest();
+        var params = "username=worker";
+        request.open('GET', "http://localhost:3000/api/getconfusion", true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.setRequestHeader("Content-length", params.length);
+        // request.withCredentials = true;
+        request.setRequestHeader("Connection", "close");
+        request.send(params);
+
+        request.onreadystatechange = function(){
+            if (request.readyState == 4 && request.status == 200)
+            {
+                change(request.responseText); // Another callback here
+            }
+        };
+
+        function change(data1){
+            console.log(data1)
+            data = JSON.parse(data1)
+            for (let i = 0; i < data.length; i++){
+                var iDiv = document.createElement('div');
+                iDiv.id = 'roww';
+                iDiv.className = 'row';
+                document.body.appendChild(iDiv);
+
+                var iiDiv = document.createElement('div');
+                iiDiv.innerHTML = data[i].command;
+                iiDiv.id = i + "co"
+
+                iDiv.appendChild(iiDiv)
+
+                var s = document.getElementById('entrypoint');
+                s.appendChild(iDiv);
+
+                var button = document.createElement("button");
+                button.innerHTML = "submit";
+                button.onclick = onclickfunction;
+                button.id = i.toString();
+                
+
+                var textbox = document.createElement("input");
+                textbox.id = i + "text";
+                iDiv.appendChild(textbox)
+                iDiv.appendChild(button)
+
+
+                // $("#entrypoint").append(iDiv)
+
+            }
+        }
+
+        function onclickfunction(e){
+            console.log(this.id)
+            let command = $("#" + this.id + "co").text();
+            let inter = $("#" + this.id + "text").val();
+
+            console.log(command)
+            console.log(inter)
+
+            fetch("http://localhost:3000/api/interpretaction", {
+                credentials: 'same-origin',
+                method: 'POST',
+                body: JSON.stringify({
+                    text: command,
+                    decry: inter,
+                }),
+                headers: {"Content-Type": "application/json"},
+            })
+            .then((response) => {
+                if (!response.ok) throw Error(response.statusText);
+                console.log("succeed!")
+                location.reload()
+            })
+            .catch(error => console.log(error));
+        }
+
+
+    });
+
+
+
+</script>
+<div class="container">
+    <h1>Transform the command to robot understandable commmand:</h1>
+    <div id="entrypoint" class="container">
+    </div>
+</div>

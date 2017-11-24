@@ -53,10 +53,12 @@ app.get('/', function (req, res) {
 
 app.post('/api/parseaction', function (req, res) {
   
-
   let reqjson = req.body;
-  let query = "SELECT WHERE command=" + req.body.text
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT * FROM commands WHERE command='" + req.body.text + "'"
+  console.log(query)
   db.get(query, (err, row)=> {
+    console.log(row)
     if (row){
       let res_body = {
         commands: row['colist']
@@ -64,14 +66,21 @@ app.post('/api/parseaction', function (req, res) {
       res.send(JSON.stringify(res_body))
     }
     else{
-
-
+      let query = "INSERT INTO confuses(commnad) VALUES('" + req.body.text +"')";
+      db.run(query)
     }
   });
-
-  // let parsed_comment = JSON.stringify(body) 
-  // res.send(parsed_comment)
 })
+
+app.post('/api/interpretaction', (req, res)=>{
+  let reqjson = req.body;
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "INSERT INTO commands(commnad, colist) VALUES("
+    + req.body.text + "," + req.body.decry + ")";
+  db.run(query);
+  let query2 = "DELETE FROM confuses WHERE '" + req.body.text + "'";
+  db.run(query2);
+});
 
 app.get('/robot/:id', function(req, res){
   // console.log("Accessed robot with id: " + req.params.id)

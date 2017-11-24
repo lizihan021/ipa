@@ -9,3 +9,6 @@ VALUES ('turn left', '1');
 
 INSERT INTO commands(command, colist)
 VALUES ('turn left then right', '12');
+
+INSERT INTO confuses(command)
+VALUES ('turn right');

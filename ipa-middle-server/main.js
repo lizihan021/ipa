@@ -3,6 +3,10 @@ const app = express()
 const sqlite3 = require('sqlite3').verbose();
 import "isomorphic-fetch"
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
@@ -11,32 +15,9 @@ db.all("SELECT * FROM robots", function(err, rows){
   console.log(rows)
 });
 
+
 //////////////////////////////////////
 //given robot_id and url, send request
-function send_ajax_request(robot_id, uri){
-  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-  let query = "SELECT ip FROM robots WHERE robotid=" + robot_id;
-
-  db.get(query, function(err, row){
-    if(row){
-      console.log("http://" + row['ip'] + uri)
-      fetch("http://" + row['ip'] + uri, { credentials: 'same-origin' })
-        .then((response)=>{
-          if (!response.ok) throw Error(response.statusText);
-          console.log("response")
-          return response.json();
-        })
-        .then((data)=>{
-          console.log("no response")
-        })
-        .catch((error) => {
-          // delete ip
-          console.log(error)
-        });
-    }
-  });
-}
-
 function insert_robot_ip(id, ip, res){
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT ip FROM robots WHERE robotid=" + id;
@@ -70,6 +51,28 @@ app.get('/', function (req, res) {
   
 })
 
+app.post('/api/parseaction', function (req, res) {
+  
+
+  let reqjson = req.body;
+  let query = "SELECT WHERE command=" + req.body.text
+  db.get(query, (err, row)=> {
+    if (row){
+      let res_body = {
+        commands: row['colist']
+      }
+      res.send(JSON.stringify(res_body))
+    }
+    else{
+
+
+    }
+  });
+
+  // let parsed_comment = JSON.stringify(body) 
+  // res.send(parsed_comment)
+})
+
 app.get('/robot/:id', function(req, res){
   // console.log("Accessed robot with id: " + req.params.id)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
@@ -83,7 +86,6 @@ app.get('/robot/:id', function(req, res){
       res.render('mes', {mes: "robot with id " + req.params.id + " was not found"});
     }
   });
-  
 })
 // xxx TODO: vulnerble to SQL inject
 app.get('/robot/:id/:control', function(req, res){

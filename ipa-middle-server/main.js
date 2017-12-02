@@ -168,7 +168,8 @@ app.get('/robot/:id', function(req, res){
 // xxx TODO: vulnerble to SQL inject
 app.get('/robot/:id/:control', function(req, res){
   // console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
-  send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
+  // send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
+  add_control_database(req.params.id, req.params.control)
 });
 
 app.get('/setip/:id/:ip', function(req, res){

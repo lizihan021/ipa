@@ -173,6 +173,5 @@ if __name__ == '__main__':
                     command = x['command']
 
                     if (command != prevCommand):
-                        print command
                         control_time(ser, command.decode(), 0.4)
                     prevCommand = command

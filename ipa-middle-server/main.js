@@ -6,6 +6,10 @@ import "isomorphic-fetch"
 
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
 let mongourl = "mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot"
 
@@ -104,6 +108,7 @@ app.get('/', function (req, res) {
 // get the translated command
 app.post('/api/parseaction', function (req, res) {
   let reqjson = req.body;
+  console.log(reqjson)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT * FROM commands WHERE command='" + req.body.text + "'"
   console.log(query)
@@ -117,7 +122,7 @@ app.post('/api/parseaction', function (req, res) {
     }
     else{
       console.log(req.body.text)
-      let query = "SELECT FROM confuses(command) WHERE command=" + res.body.text;
+      let query = "SELECT FROM confuses(command) WHERE command=" + req.body.text;
       db.get(query, (err, row)=> {
         if (row){
           console.log("error")

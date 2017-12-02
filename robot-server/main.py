@@ -3,6 +3,7 @@ from flask import request
 import numpy as np
 import socket
 import urllib2
+from pymongo import MongoClient
 
 import freenect
 import cv2
@@ -155,7 +156,9 @@ if __name__ == '__main__':
         print("Try to connect to Mongo")
         try:
             client = MongoClient("mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot")
+            print('fds')
             db = client.ipa_robot
+            print('fds')
             commands = db.commands
             print("Success!")
         except:

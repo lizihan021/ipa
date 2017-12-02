@@ -156,25 +156,32 @@ if __name__ == '__main__':
         print("Try to connect to Mongo")
         try:
             client = MongoClient("mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot")
-            print('fds')
             db = client.ipa_robot
-            print('fds')
             commands = db.commands
             print("Success!")
         except:
             print("Unable to connect to database")
             sys.exit()
 
+        print("Try to update Mongo")
+        post = {'_id': robot_id, 'type': 'robot', 'command': 'stop', 'message': 'Hello!' }
+        try:
+            commands.insert_one(post)
+        except:
+            try:
+                commands.update_one({'_id':robot_id}, {"$set": post}, upsert=False)
+                print("robot exist")
+            except:
+                print("fail")
+
         while True:
             ser = get_serial()
-            prevCommand = ""
 
             while True:
                 cursor = commands.find({'_id': robot_id})
 
                 for x in cursor:
                     command = x['command']
-
-                    if (command != prevCommand):
+                    if (command != "stop"):
                         control_time(ser, command.decode(), 0.4)
-                    prevCommand = command
+                        commands.update_one({'_id':robot_id}, {"$set": post}, upsert=False)

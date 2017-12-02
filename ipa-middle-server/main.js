@@ -1,5 +1,4 @@
 const express = require('express')
-const mongoclinet = require('mongodb').MongoClient;
 const app = express()
 const sqlite3 = require('sqlite3').verbose();
 import "isomorphic-fetch"
@@ -11,7 +10,6 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-let mongourl = "mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot"
 
 db.all("SELECT * FROM robots", function(err, rows){
   console.log(rows)
@@ -55,16 +53,17 @@ function add_control_database(robot_id, command){
       
   //   }
   // });
-
-  MongoClient.connect(mongourl, function(err, db) {
+  const mongoclient = require('mongodb').MongoClient;
+  let mongourl = "mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot"
+  mongoclient.connect(mongourl, function(err, db) {
     if (err) throw err;
-    var myquery = { _id: robot_id };
-    var newvalues = { command: command};
-    db.collection("commands").updateOne(myquery, newvalues, function(err, res) {
+    var myquery = { _id: parseInt(robot_id) };
+    var newvalues = { $set: {command: command}};
+    db.collection("commands").update(myquery, newvalues, {w:1} ,function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
-      db.close();
     });
+
   });
 
 }
@@ -178,7 +177,7 @@ app.get('/robot/:id', function(req, res){
 
   db.get(query, function(err, row){
     if(row){
-      res.render('robot', {robot_num: req.params.id, robot_ip:row['ip']});
+      res.render('robot', {robot_num: req.params.id, robot_ip: row['ip']});
     }
     else{
       res.render('mes', {mes: "robot with id " + req.params.id + " was not found"});
@@ -187,10 +186,12 @@ app.get('/robot/:id', function(req, res){
   
 })
 // xxx TODO: vulnerble to SQL inject
-app.get('/robot/:id/:control', function(req, res){
+app.get('/robotcontrol/:id/:control', function(req, res){
   // console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
   // send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
+  console.log(req.params.id + " " + req.params.control)
   add_control_database(req.params.id, req.params.control)
+  res.send(JSON.stringify({"dumy" : 1}))
 });
 
 app.get('/setip/:id/:ip', function(req, res){

@@ -26,6 +26,14 @@ $( document ).ready(function() {
     });
 });
 
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
 function send_csrf(command){
     // trivial commands
 	// var request = new XMLHttpRequest();
@@ -36,21 +44,8 @@ function send_csrf(command){
 	// request.withCredentials = true;
 	// request.setRequestHeader("Connection", "close");
 	// request.send(params);
-    fetch("/"+robot_num+"/"+command, {
-        credentials: 'same-origin',
-        method: 'POST',
-        body: JSON.stringify({
-            text: commands,
-        }),
-        headers: {"Content-Type": "application/json"},
-    })
-    .then((response) => {
-        if (!response.ok) throw Error(response.statusText);
-        return response.json();
-    })
-    .then((data) => {
-        console.log(data)
-    })
+    httpGet("/robotcontrol/"+ <%= robot_num %> +"/stop")
+    httpGet("/robotcontrol/"+ <%= robot_num %> +"/"+command)
 }
 
 function send_complex_commands(commands){

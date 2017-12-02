@@ -154,7 +154,7 @@ if __name__ == '__main__':
     elif sys.argv[1] == "local":
         print("Try to connect to Mongo")
         try:
-            client = MongoClient("mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot")
+            client = MongoClient("mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot")
             db = client.ipa_robot
             commands = db.commands
             print("Success!")

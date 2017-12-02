@@ -22,6 +22,7 @@ $( document ).ready(function() {
     $("#submit").mouseup(()=>{
         var commands = $("#commands").val()
         send_complex_commands(commands)
+        $("#commands").val("")
     });
 });
 
@@ -69,7 +70,18 @@ function send_complex_commands(commands){
     .then((data) => {
         console.log(data)
         for (let i = 0; i < data["commands"]; i++){
-            send_csrf(data["command"][i])
+            if (data["command"][i] === '1'){
+                send_csrf("left")
+            }
+            else if (data["command"][i] === '2'){
+                send_csrf("right")
+            }
+            else if (data["command"][i] === '3'){
+                send_csrf("up")
+            }
+            else if (data["command"][i] === '4'){
+                send_csrf("down")
+            }
         }
     })
     .catch(error => console.log(error));

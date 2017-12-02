@@ -49,18 +49,17 @@ function add_control_database(robot_id, command){
       
   //   }
   // });
-  console.log("this")
   const mongoclient = require('mongodb').MongoClient;
   let mongourl = "mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot"
   mongoclient.connect(mongourl, function(err, db) {
     if (err) throw err;
-    var myquery = { _id: robot_id };
-    var newvalues = { command: command};
-    db.collection("commands").updateOne(myquery, newvalues, function(err, res) {
+    var myquery = { _id: parseInt(robot_id) };
+    var newvalues = { $set: {command: command}};
+    db.collection("commands").update(myquery, newvalues, {w:1} ,function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
-      db.close();
     });
+
   });
 
 }
@@ -187,6 +186,7 @@ app.get('/robotcontrol/:id/:control', function(req, res){
   // send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
   console.log(req.params.id + " " + req.params.control)
   add_control_database(req.params.id, req.params.control)
+  res.send(JSON.stringify({"dumy" : 1}))
 });
 
 app.get('/setip/:id/:ip', function(req, res){

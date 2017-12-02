@@ -166,14 +166,18 @@ if __name__ == '__main__':
         try:
             commands.insert_one(
                 {
-                    '_id': 1,
+                    '_id': robot_id,
                     'type': 'robot',
                     'command': 'stop',
                     'message': 'Hello!'
                 }
             )
         except:
-            print("robot exist")
+            try:
+                commands.update_one({'_id':robot_id}, {"command": "stop"}, upsert=False)
+                print("robot exist")
+            except:
+                print("fail")
 
         while True:
             ser = get_serial()

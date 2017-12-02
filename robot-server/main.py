@@ -3,6 +3,7 @@ from flask import request
 import numpy as np
 import socket
 import urllib2
+from pymongo import MongoClient
 
 import freenect
 import cv2

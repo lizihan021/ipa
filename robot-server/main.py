@@ -176,14 +176,12 @@ if __name__ == '__main__':
 
         while True:
             ser = get_serial()
-            prevCommand = ""
 
             while True:
                 cursor = commands.find({'_id': robot_id})
 
                 for x in cursor:
                     command = x['command']
-
-                    if (command != prevCommand):
+                    if (command != "stop"):
                         control_time(ser, command.decode(), 0.4)
-                    prevCommand = command
+                        commands.update_one({'_id':robot_id}, {"$set": post}, upsert=False)

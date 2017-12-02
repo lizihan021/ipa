@@ -156,14 +156,24 @@ if __name__ == '__main__':
         print("Try to connect to Mongo")
         try:
             client = MongoClient("mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot")
-            print('fds')
             db = client.ipa_robot
-            print('fds')
             commands = db.commands
             print("Success!")
         except:
             print("Unable to connect to database")
             sys.exit()
+
+        try:
+            commands.insert_one(
+                {
+                    '_id': 1,
+                    'type': 'robot',
+                    'command': 'stop',
+                    'message': 'Hello!'
+                }
+            )
+        except:
+            print("robot exist")
 
         while True:
             ser = get_serial()

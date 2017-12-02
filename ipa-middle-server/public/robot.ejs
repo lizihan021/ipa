@@ -25,6 +25,8 @@ $( document ).ready(function() {
         send_complex_commands(commands)
         $("#commands").val("")
     });
+
+    rendercommandlist()
 });
 
 function httpGet(theUrl)
@@ -64,28 +66,102 @@ function send_complex_commands(commands){
     })
     .then((data) => {
         console.log(data)
-        for (let i = 0; i < data["commands"]; i++){
-            if (data["command"][i] === '1'){
+        console.log("data")
+        for (let i = 0; i < data["commands"].length; i++){
+            if (data["commands"].charAt(i) === '1'){
                 send_csrf("left")
             }
-            else if (data["command"][i] === '2'){
+            else if (data["commands"].charAt(i) === '2'){
                 send_csrf("right")
             }
-            else if (data["command"][i] === '3'){
+            else if (data["commands"].charAt(i) === '3'){
                 send_csrf("up")
             }
-            else if (data["command"][i] === '4'){
+            else if (data["commands"].charAt(i) === '4'){
                 send_csrf("down")
             }
+            else if (data["commands"].charAt(i) === '5'){
+                send_csrf("beep")
+            }
+            sleep(1500);
+            console.log("command send")
         }
     })
     .catch(error => console.log(error));
 }
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+
+function rendercommandlist(){
+
+    fetch("/api/getvalidco", {
+        credentials: 'same-origin',
+        method: 'GET',
+    })
+    .then((response) => {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data)
+        let command_dict = {
+            "1" : "left",
+            "2" : "right",
+            "3" : "up",
+            "4" : "down",
+            "5" : "beep"
+        }
+
+        for (let i = 0; i < data.length; i++){
+            var iDiv = document.createElement('div');
+            iDiv.className = 'row';
+
+            var iiDiv = document.createElement('button');
+            iiDiv.innerHTML = data[i].command;
+            iiDiv.id = i + "co"
+            iiDiv.style.float = "left"
+            iiDiv.style.margin = "2px"
+            iiDiv.className = 'btn-primary'
+            iiDiv.onclick = onclickfunction
+
+            iDiv.appendChild(iiDiv)
+
+            var s = document.getElementById('commandlist');
+            s.appendChild(iDiv);
+
+
+            // var iiiDiv = document.createElement('div');
+            // let inter = "         =>  "
+            // for (let j = 0; j < data[i].colist.length; j++){
+            //     inter += command_dict[data[i].colist[j]]
+            //     inter += " "
+            // }
+
+            // iiiDiv.innerHTML = inter;
+            // iDiv.appendChild(iiiDiv)
+        }
+    })
+    .catch(error => console.log(error));
+}
+
+
+function onclickfunction(e){
+    console.log(this.innerHTML)
+    send_complex_commands(this.innerHTML)
+}
+
 </script>
 
 <div class="container">
-	<h1>The Control Interface</h1>
+	<h3>The Control Interface</h3>
 	<button id="up" class="btn btn-primary">up</button>
 	<button id="down" class="btn btn-primary">down</button>
 	<button id="left" class="btn btn-primary">left</button>
@@ -101,9 +177,13 @@ function send_complex_commands(commands){
     <button id="submit" class="btn btn-primary">submit</button>
 
 	<div>
-	    <a href="/"><p>Back to home</p>
+	    <a href="/"><p>Back to home</a></p>
 	</div>
+    <div>
+        <h3>Avaliable commands:</h3>
+    </div>
+    <div id="commandlist" class="container">
+    </div>
 	<iframe style="width:700px;height:500px;" frameborder="0" src="http://<%= robot_ip %>:3000/video_feed"></iframe>
-
 </div>
 

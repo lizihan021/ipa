@@ -99,7 +99,6 @@ app.get('/', function (req, res) {
   db.all(query, function(err, row){
     res.render('index', {robots: row});
   });
-  
 })
 
 
@@ -139,6 +138,16 @@ app.post('/api/parseaction', function (req, res) {
   });
 })
 
+
+app.get('/api/getvalidco', function(req, res){
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT * FROM commands"
+  db.all(query, (err, row)=> {
+    if (err) throw err;
+    res.send(JSON.stringify(row))
+  }) 
+})
+
 /////////////////////////////////
 // get all the confusion commands (used by the worker)
 app.get('/api/getconfusion', function (req, res) {
@@ -151,7 +160,6 @@ app.get('/api/getconfusion', function (req, res) {
     res.send(JSON.stringify(row))
   });
 })
-
 
 /////////////////////////////////
 // accept the translation information given by the worker

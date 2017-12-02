@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoclinet = require('mongodb').MongoClient;
 const app = express()
 const sqlite3 = require('sqlite3').verbose();
 import "isomorphic-fetch"
@@ -6,6 +7,7 @@ import "isomorphic-fetch"
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+let mongourl = "mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot"
 
 db.all("SELECT * FROM robots", function(err, rows){
   console.log(rows)
@@ -36,19 +38,33 @@ function send_ajax_request(robot_id, uri){
     }
   });
 }
+
 //////////////////////////////////////
 //given robot id and command, we can add that into database
-function add_control_database(robot_id, uri){
-  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-  let query = "SELECT ip FROM robots WHERE robotid=" + robot_id;
+function add_control_database(robot_id, command){
+  // let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  // let query = "SELECT ip FROM robots WHERE robotid=" + robot_id;
 
-  db.get(query, function(err, row){
-    if(row){
-      console.log("http://" + row['ip'] + uri)
+  // db.get(query, function(err, row){
+  //   if(row){
+  //     console.log("http://" + row['ip'] + uri)
       
-    }
+  //   }
+  // });
+
+  MongoClient.connect(mongourl, function(err, db) {
+    if (err) throw err;
+    var myquery = { _id: robot_id };
+    var newvalues = { command: command};
+    db.collection("ipa_robot").updateOne(myquery, newvalues, function(err, res) {
+      if (err) throw err;
+      console.log("1 document updated");
+      db.close();
+    });
   });
+
 }
+
 
 function insert_robot_ip(id, ip, res){
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
@@ -168,7 +184,7 @@ app.get('/robot/:id', function(req, res){
 // xxx TODO: vulnerble to SQL inject
 app.get('/robot/:id/:control', function(req, res){
   // console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
-  send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
+  add_control_database(req.params.id, req.params.control)
 });
 
 app.get('/setip/:id/:ip', function(req, res){

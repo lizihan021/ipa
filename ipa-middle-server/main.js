@@ -83,6 +83,73 @@ app.get('/', function (req, res) {
   
 })
 
+
+/////////////////////////////////
+// get the translated command
+app.post('/api/parseaction', function (req, res) {
+  let reqjson = req.body;
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT * FROM commands WHERE command='" + req.body.text + "'"
+  console.log(query)
+  db.get(query, (err, row)=> {
+    console.log(row)
+    if (row){
+      let res_body = {
+        commands: row['colist']
+      }
+      res.send(JSON.stringify(res_body))
+    }
+    else{
+      console.log(req.body.text)
+      let query = "SELECT FROM confuses(command) WHERE command=" + res.body.text;
+      db.get(query, (err, row)=> {
+        if (row){
+          console.log("error")
+        }
+        else{
+          query = "INSERT INTO confuses(command) VALUES('" + req.body.text +"')";
+          db.run(query)
+          let res_body = {
+            commands: ""
+          }
+          res.send(JSON.stringify(res_body))
+        }
+      })
+    }
+  });
+})
+
+/////////////////////////////////
+// get all the confusion commands (used by the worker)
+app.get('/api/getconfusion', function (req, res) {
+  let reqjson = req.body;
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT * FROM confuses"
+  db.all(query, (err, row)=> {
+    console.log(row)
+    res.header('Access-Control-Allow-Origin', '*');
+    res.send(JSON.stringify(row))
+  });
+})
+
+
+/////////////////////////////////
+// accept the translation information given by the worker
+app.post('/api/interpretaction', (req, res)=>{
+  let reqjson = req.body;
+  console.log(reqjson)
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "INSERT INTO commands(command, colist) VALUES('"
+    + req.body.text + "','" + req.body.decry + "')";
+  console.log(query)
+  db.run(query);
+  let query2 = "DELETE FROM confuses WHERE command='" + req.body.text + "'";
+
+  db.run(query2);
+  res.send(JSON.stringify({"dumy" : 1}))
+});
+
+
 app.get('/robot/:id', function(req, res){
   // console.log("Accessed robot with id: " + req.params.id)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');

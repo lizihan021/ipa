@@ -20,6 +20,7 @@ $( document ).ready(function() {
     $("#left").mouseup(()=>{send_csrf("stop")});
     $("#right").mouseup(()=>{send_csrf("stop")});
     $("#submit").mouseup(()=>{
+        console.log("ffff")
         var commands = $("#commands").val()
         send_complex_commands(commands)
         $("#commands").val("")
@@ -44,7 +45,6 @@ function send_csrf(command){
 	// request.withCredentials = true;
 	// request.setRequestHeader("Connection", "close");
 	// request.send(params);
-    httpGet("/robotcontrol/"+ <%= robot_num %> +"/stop")
     httpGet("/robotcontrol/"+ <%= robot_num %> +"/"+command)
 }
 

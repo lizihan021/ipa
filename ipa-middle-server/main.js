@@ -7,7 +7,7 @@ import "isomorphic-fetch"
 app.set('views', __dirname + '/public');
 app.set('view engine', 'ejs');
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-let mongourl = "mongodb://admin:admin@ds149069.mlab.com:49069/ipa_robot"
+let mongourl = "mongodb://admin:admin@ds127936.mlab.com:27936/ipa_robot"
 
 db.all("SELECT * FROM robots", function(err, rows){
   console.log(rows)
@@ -56,7 +56,7 @@ function add_control_database(robot_id, command){
     if (err) throw err;
     var myquery = { _id: robot_id };
     var newvalues = { command: command};
-    db.collection("ipa_robot").updateOne(myquery, newvalues, function(err, res) {
+    db.collection("commands").updateOne(myquery, newvalues, function(err, res) {
       if (err) throw err;
       console.log("1 document updated");
       db.close();

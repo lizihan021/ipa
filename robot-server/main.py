@@ -114,7 +114,7 @@ def video_feed():
 @app.route('/control/<command>')
 def control():
     print(reqeust.args.get('time'))
-    control_time(ser, command, reqeust.args.get('time')):
+    control_time(ser, command, reqeust.args.get('time'))
     return str(reqeust.args.get('time'))
 
 if __name__ == '__main__':

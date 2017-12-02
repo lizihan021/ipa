@@ -70,8 +70,21 @@ app.post('/api/parseaction', function (req, res) {
       res.send(JSON.stringify(res_body))
     }
     else{
-      let query = "INSERT INTO confuses(commnad) VALUES('" + req.body.text +"')";
-      db.run(query)
+      console.log(req.body.text)
+      let query = "SELECT FROM confuses(command) WHERE command=" + res.body.text;
+      db.get(query, (err, row)=> {
+        if (row){
+          console.log("error")
+        }
+        else{
+          query = "INSERT INTO confuses(command) VALUES('" + req.body.text +"')";
+          db.run(query)
+          let res_body = {
+            commands: ""
+          }
+          res.send(JSON.stringify(res_body))
+        }
+      })
     }
   });
 })
@@ -97,7 +110,7 @@ app.post('/api/interpretaction', (req, res)=>{
   console.log(reqjson)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "INSERT INTO commands(command, colist) VALUES('"
-    + req.body.text + "'," + req.body.decry + ")";
+    + req.body.text + "','" + req.body.decry + "')";
   console.log(query)
   db.run(query);
   let query2 = "DELETE FROM confuses WHERE command='" + req.body.text + "'";

@@ -163,18 +163,13 @@ if __name__ == '__main__':
             print("Unable to connect to database")
             sys.exit()
 
+        print("Try to update Mongo")
+        post = {'_id': robot_id, 'type': 'robot', 'command': 'stop', 'message': 'Hello!' }
         try:
-            commands.insert_one(
-                {
-                    '_id': robot_id,
-                    'type': 'robot',
-                    'command': 'stop',
-                    'message': 'Hello!'
-                }
-            )
+            commands.insert_one(post)
         except:
             try:
-                commands.update_one({'_id':robot_id}, {"command": "stop"}, upsert=False)
+                commands.update_one({'_id':robot_id}, {"$set": post}, upsert=False)
                 print("robot exist")
             except:
                 print("fail")

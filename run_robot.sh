@@ -1,1 +1,1 @@
-python ./robot-server/main.py local
+python ./robot-server/main.py open

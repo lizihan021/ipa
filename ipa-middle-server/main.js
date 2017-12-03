@@ -166,6 +166,7 @@ app.get('/api/getconfusion', function (req, res) {
 app.post('/api/interpretaction', (req, res)=>{
   let reqjson = req.body;
   console.log(reqjson)
+  console.log(req.body.text)
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "INSERT INTO commands(command, colist) VALUES('"
     + req.body.text + "','" + req.body.decry + "')";
@@ -205,6 +206,11 @@ app.get('/robotcontrol/:id/:control', function(req, res){
 app.get('/setip/:id/:ip', function(req, res){
   // console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
   insert_robot_ip(req.params.id, req.params.ip, res)
+});
+
+app.get('/transfer', function(req, res){
+  // console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
+  res.render('transfer');
 });
 
 app.listen(3000, function () {

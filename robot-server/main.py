@@ -57,6 +57,7 @@ def get_serial():
         sendCommand(ser, command_dict['S'])
         sendCommand(ser, command_dict['B'])
         print("Success on USB0!")
+        return ser
     except:
         try:
             ser = serial.Serial('/dev/ttyUSB1', 115200)
@@ -64,9 +65,11 @@ def get_serial():
             sendCommand(ser, command_dict['S'])
             sendCommand(ser, command_dict['B'])
             print("Success on USB1!")
+            return ser
         except:
             print("Fail to find robot!")
-    return ser
+            return None
+    
 
 def control_time(ser, command, time):
     if command == "reset":

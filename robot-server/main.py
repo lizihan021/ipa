@@ -80,8 +80,8 @@ def control_time(ser, command, sleep_time = 0.4):
         if command in command_to_control:
             # add move discrate here
             sendCommand(ser, command_dict[command_to_control[command]])
-            time.sleep(sleep_time)
-            sendCommand(ser, command_dict["SPACE"])
+            # time.sleep(sleep_time)
+            # sendCommand(ser, command_dict["SPACE"])
 
 # send commands to robot through serial
 def sendCommand(serial, input):
@@ -101,6 +101,7 @@ def index():
 def gen():
     while True:
         try:
+            time.sleep(0.1)
             array,_ = freenect.sync_get_video()
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array

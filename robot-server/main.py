@@ -111,6 +111,7 @@ def gen():
         except:
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + b'\r\n\r\n')
+            break
 
 @app.route('/video_feed')
 def video_feed():

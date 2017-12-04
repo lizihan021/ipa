@@ -71,7 +71,7 @@ def get_serial():
             return None
     
 
-def control_time(ser, command, time = 0.4):
+def control_time(ser, command, sleep_time = 0.4):
     if command == "reset":
         sendCommand(ser, command_dict['P'])
         sendCommand(ser, command_dict['S'])
@@ -80,7 +80,7 @@ def control_time(ser, command, time = 0.4):
         if command in command_to_control:
             # add move discrate here
             sendCommand(ser, command_dict[command_to_control[command]])
-            time.sleep(time)
+            time.sleep(sleep_time)
             sendCommand(ser, command_dict["SPACE"])
 
 # send commands to robot through serial

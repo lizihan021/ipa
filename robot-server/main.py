@@ -116,10 +116,10 @@ def video_feed():
     return Response(gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/control/<command>')
-def control():
+def control(command):
     print(reqeust.args.get('time'))
-    control_time(ser, command, reqeust.args.get('time'))
-    return str(reqeust.args.get('time'))
+    control_time(ser, command) #, reqeust.args.get('time'))
+    return str(command) #reqeust.args.get('time'))
 
 if __name__ == '__main__':
     #####

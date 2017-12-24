@@ -167,9 +167,28 @@ app.post('/api/interpretaction', (req, res)=>{
   let reqjson = req.body;
   console.log(reqjson)
   console.log(req.body.text)
+  console.log(req.body.decry, "decry")
+  let vec = req.body.decry.split(" ")
+  let tmp = ""
+  for (let i = 0; i < vec.length; i++){
+  	if (vec[i] === "right"){
+  		tmp += "1"
+  	}
+  	else if (vec[i] === "left"){
+  		tmp += "2"
+  	}
+  	else if (vec[i] === "up"){
+  		tmp += "3"
+  	}
+  	else if (vec[i] === "down"){
+  		tmp += "4"
+  	}
+  }
+
+
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "INSERT INTO commands(command, colist) VALUES('"
-    + req.body.text + "','" + req.body.decry + "')";
+    + req.body.text + "','" + tmp + "')";
   console.log(query)
   db.run(query);
   let query2 = "DELETE FROM confuses WHERE command='" + req.body.text + "'";

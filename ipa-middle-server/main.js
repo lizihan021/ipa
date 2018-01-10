@@ -140,7 +140,7 @@ app.post('/api/parseaction', function (req, res) {
 })
 
 
-app.get('/api/uploadpicture', function(req, res){
+app.post('/api/uploadpicture', function(req, res){
 
   console.log("start")
 

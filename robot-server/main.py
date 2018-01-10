@@ -112,7 +112,7 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            thread = unirest.get("http://sjtusaa.website/api/uploadpicture", headers={ "Accept": "application/json" }, \
+            thread = unirest.post("http://sjtusaa.website/api/uploadpicture", headers={ "Accept": "application/json" }, \
                 params={ "id":robot_id, "ip":robot_ip, "pic": frame }, callback=callback_function)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')

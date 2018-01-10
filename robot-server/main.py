@@ -98,10 +98,10 @@ def callback(response):
 # consume async get request
 def consumeGETRequestASync():
     params = {'test1':'param1','test2':'param2'}
-    url = 'http://sjtusaa.website/api/uploadpicture'
+    url = 'http://localhost:3000/api/uploadpicture'
     headers = {"Accept": "application/json"}
     # call get service with headers and params
-    res = unirest.post(url, headers = headers,params = params)
+    res = unirest.post(url, headers = headers, params= params)
     print "code:"+ str(res.code)
 
 # the server app

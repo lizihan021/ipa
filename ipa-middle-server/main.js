@@ -8,6 +8,7 @@ app.set('view engine', 'ejs');
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded( {extended: true} ))
 
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
 let fs = require('fs')

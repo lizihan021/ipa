@@ -144,16 +144,26 @@ app.post('/api/parseaction', function (req, res) {
 app.post('/api/uploadpicture', function(req, res){
 
   console.log("start")
-  console.log(req.params)
-  console.log(req.body)
-  console.log(req.headers)
+
+  let new_body = req.body
+  let counter = 0
+  let body_req = {}
+  for (let key in new_body) {
+    if (counter == 0){
+      body = JSON.parse(key)
+      counter = 1;
+    }
+  }
+
+
 
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-  let query = "SELECT ip FROM robots WHERE robotid=" + req.body;
+  let query = "SELECT ip FROM robots WHERE robotid=" + body_req.id;
   
 
+
   db.get(query, function(err, row){
-    let body = req.params.pic
+    let body = body_req.pic
     
     let curnum = row['curnum']
     console.log(curnum)

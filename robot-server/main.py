@@ -93,16 +93,14 @@ def sendCommand(serial, input):
 
 
 def callback(response):
-    # print response
     print "code:"+ str(response.code)
 # consume async get request
-def consumeGETRequestASync():
-    params = {'test1':'param1','test2':'param2'}
-    url = 'http://localhost:3000/api/uploadpicture'
+def consumeGETRequestASync(frame):
+    params = {'id':robot_id,'ip':robot_ip, 'pic': frame}
+    url = 'http://sjtusaa.website/api/uploadpicture'
     headers = {"Accept": "application/json"}
     # call get service with headers and params
-    res = unirest.post(url, headers = headers, params= params)
-    print "code:"+ str(res.code)
+    unirest.post(url, headers = headers, params= params, callback = callback)
 
 # the server app
 app = Flask(__name__, template_folder='templates')
@@ -121,7 +119,7 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            consumeGETRequestASync()
+            consumeGETRequestASync(frame)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         except KeyboardInterrupt:

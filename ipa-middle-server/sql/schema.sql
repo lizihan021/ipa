@@ -2,6 +2,7 @@ CREATE TABLE robots(
     ip VARCHAR(20) NOT NULL,
     robotid INTEGER NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    curnum INTEGER NOT NULL,
     PRIMARY KEY(robotid)
 );
 

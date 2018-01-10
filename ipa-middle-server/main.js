@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-
+let fs = require('fs')
 db.all("SELECT * FROM robots", function(err, rows){
   console.log(rows)
 });
@@ -137,6 +137,76 @@ app.post('/api/parseaction', function (req, res) {
       })
     }
   });
+})
+
+
+app.get('/api/uploadpicture', function(req, res){
+
+
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT ip FROM robots WHERE robotid=" + req.params.id;
+
+  db.get(query, function(err, row){
+    let body = req.params.pic
+    
+    let curnum = row['curnum']
+
+    let filePath = ""
+    if (curnum == 5){
+      filePath = __dirname + '/public/images/' + curnum + '.txt';
+    }
+    else{
+      filePath = __dirname + '/public/images/' + curnum + 1 + '.txt';
+    }
+    
+
+    // fs.appendFile(filePath, body, function() {
+    // console.log("image received")
+    if (row) {
+      if (curnum == 5) {
+        fs.unlink('1.txt', function (err) {
+          if (err) throw err;
+          console.log('File deleted!');
+        });
+        fs.rename('2.txt', '1.txt', function (err) {
+          if (err) throw err;
+        });
+        fs.rename('3.txt', '2.txt', function (err) {
+          if (err) throw err;
+        });
+        fs.rename('4.txt', '3.txt', function (err) {
+          if (err) throw err;
+        });
+        fs.rename('5.txt', '4.txt', function (err) {
+          if (err) throw err;
+        });
+
+        fs.writeFile(filePath, body, function() {
+          console.log("file saved")
+        });
+      }
+      else {
+        let query2 = "UPDATA robots SET curnum=" + curnum + " WHERE robotid=" + req.params.id
+        db.run(query)
+        
+        fs.writeFile(filePath, body, function() {
+          console.log("file saved")
+        });
+      }
+    }
+
+
+
+    // });
+  });
+
+  // fileStore.put({
+  //   filename: 'test.txt',
+  //   contentType: 'application/json',
+  //   stream: fs.createReadStream('/test.txt')
+  // }, function(err) {
+  //   console.log(err); // undefined 
+  // });
 })
 
 

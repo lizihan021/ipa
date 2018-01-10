@@ -142,6 +142,7 @@ app.post('/api/parseaction', function (req, res) {
 
 app.get('/api/uploadpicture', function(req, res){
 
+  console.log("start")
 
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT ip FROM robots WHERE robotid=" + req.params.id;
@@ -150,6 +151,7 @@ app.get('/api/uploadpicture', function(req, res){
     let body = req.params.pic
     
     let curnum = row['curnum']
+    console.log(curnum)
 
     let filePath = ""
     if (curnum == 5){
@@ -159,7 +161,6 @@ app.get('/api/uploadpicture', function(req, res){
       filePath = __dirname + '/public/images/' + curnum + 1 + '.txt';
     }
     
-
     // fs.appendFile(filePath, body, function() {
     // console.log("image received")
     if (row) {
@@ -194,8 +195,6 @@ app.get('/api/uploadpicture', function(req, res){
         });
       }
     }
-
-
 
     // });
   });

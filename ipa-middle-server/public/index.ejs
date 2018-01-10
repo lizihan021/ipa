@@ -6,9 +6,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <div class="container">
 	<h1>Multi Robot Platform</h1>
-	<div>
-		<% for (var item in robots) { %>
-		    <a href="/robot/<%= robots[item].robotid %>"><p>robot<%= robots[item].robotid %> with ip <%= robots[item].ip %></p>
-		<% } %>
-	</div>
+	<% for (var item in robots) { %>
+		<div class="row" style="margin-bottom: 10px;">
+			<div class="col-sm-4">
+				<a href="/robot/<%= robots[item].robotid %>">
+		    	<button style="width: 100%;" class="btn btn-primary">Robot No.<%= robots[item].robotid %> with ip <%= robots[item].ip %> </button>
+		    	</a>
+		    </div>
+		</div>
+	<% } %>
 </div>

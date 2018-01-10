@@ -25,12 +25,12 @@ function send_ajax_request(robot_id, uri){
     if(row){
       console.log("http://" + row['ip'] + uri)
       fetch("http://" + row['ip'] + uri, { credentials: 'same-origin' })
-        .then((response)=>{
+        .then((response) => {
           if (!response.ok) throw Error(response.statusText);
           console.log("response")
           return response.json();
         })
-        .then((data)=>{
+        .then((data) => {
           console.log("no response")
         })
         .catch((error) => {
@@ -40,7 +40,6 @@ function send_ajax_request(robot_id, uri){
     }
   });
 }
-
 
 
 //////////////////////////////////////

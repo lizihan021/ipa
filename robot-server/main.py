@@ -103,6 +103,7 @@ def gen():
         try:
             time.sleep(0.1)
             array,_ = freenect.sync_get_video()
+            
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)

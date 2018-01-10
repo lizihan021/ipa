@@ -41,6 +41,8 @@ function send_ajax_request(robot_id, uri){
   });
 }
 
+
+
 //////////////////////////////////////
 //given robot id and command, we can add that into database
 function add_control_database(robot_id, command){

@@ -145,7 +145,10 @@ app.post('/api/uploadpicture', function(req, res){
   console.log("start")
 
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-  let query = "SELECT ip FROM robots WHERE robotid=" + req.params.id;
+  let query = "SELECT ip FROM robots WHERE robotid=" + req.body;
+  console.log(req.params)
+  console.log(req.body)
+  console.log(req)
 
   db.get(query, function(err, row){
     let body = req.params.pic

@@ -6,6 +6,7 @@ import urllib2
 from pymongo import MongoClient
 
 import freenect
+import unirest
 import cv2
 import sys, serial, time
 
@@ -90,6 +91,10 @@ def sendCommand(serial, input):
         cmd += chr(int(nums))
     serial.write(cmd)
 
+def callback_function(response):
+    print(response.code)
+    return 0
+
 # the server app
 app = Flask(__name__, template_folder='templates')
 
@@ -103,11 +108,12 @@ def gen():
         try:
             time.sleep(0.1)
             array,_ = freenect.sync_get_video()
-            
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
+            thread = unirest.post("http://sjtusaa.website/uploadpicture", headers={ "Accept": "application/json" }, \
+                params={ "id":robot_id, "ip":robot_ip, "pic": frame }, callback=callback_function)
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         except KeyboardInterrupt:
@@ -136,6 +142,7 @@ if __name__ == '__main__':
         exit(0)
     port = 3000
 
+    unirest.timeout(3)
     # Try to get local ip
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))

@@ -95,14 +95,14 @@ def sendCommand(serial, input):
 def callback(response):
     # print response
     print "code:"+ str(response.code)
- 
 # consume async get request
 def consumeGETRequestASync():
     params = {'test1':'param1','test2':'param2'}
     url = 'http://sjtusaa.website/api/uploadpicture'
     headers = {"Accept": "application/json"}
     # call get service with headers and params
-    unirest.get(url, headers = headers,params = params, callback = callback)
+    res = unirest.get(url, headers = headers,params = params)
+    print "code:"+ str(res.code)
 
 # the server app
 app = Flask(__name__, template_folder='templates')

@@ -140,14 +140,15 @@ app.post('/api/parseaction', function (req, res) {
 })
 
 
-app.post('/api/uploadpicture', function(req, res){
+app.get('/api/uploadpicture', function(req, res){
 
   console.log("start")
-
-  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-  let query = "SELECT ip FROM robots WHERE robotid=" + req.body;
   console.log(req.params)
   console.log(req.body)
+  
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT ip FROM robots WHERE robotid=" + req.body;
+  
 
   db.get(query, function(err, row){
     let body = req.params.pic

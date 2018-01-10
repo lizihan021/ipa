@@ -101,7 +101,7 @@ def consumeGETRequestASync():
     url = 'http://sjtusaa.website/api/uploadpicture'
     headers = {"Accept": "application/json"}
     # call get service with headers and params
-    res = unirest.get(url, headers = headers,params = params)
+    res = unirest.post(url, headers = headers,params = params)
     print "code:"+ str(res.code)
 
 # the server app

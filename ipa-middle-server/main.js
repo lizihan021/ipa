@@ -28,8 +28,10 @@ var upload = multer({
 app.post("/api/Upload", function(req, res) {
     upload(req, res, function(err) {
        if (err) {
+          console.log(err)
            return res.end("Something went wrong!");
        }
+       console.log("File uploaded sucessfully!.")
        return res.end("File uploaded sucessfully!.");
     });
 });

@@ -9,6 +9,31 @@ app.set('view engine', 'ejs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded( {extended: true} ))
+//app.use(express.bodyParser({uploadDir:'/path/to/temporary/directory/to/store/uploaded/files'}));
+
+////////////////////////////////////////
+var multer = require('multer');
+var Storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+       callback(null, __dirname + "/Images");
+    },
+    filename: function(req, file, callback) {
+       callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+    }
+});
+var upload = multer({
+    storage: Storage
+}).array("imgUploader", 3);
+
+app.post("/api/Upload", function(req, res) {
+    upload(req, res, function(err) {
+       if (err) {
+           return res.end("Something went wrong!");
+       }
+       return res.end("File uploaded sucessfully!.");
+    });
+});
+///////////////////////////////////////
 
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
 let fs = require('fs')

@@ -21,17 +21,18 @@
   },
   "dependencies": {
     "connect": "^3.6.5",
+    "connect-busboy": "0.0.2",
     "ejs": "^2.5.7",
     "es6-promise": "^4.1.1",
     "express": "^4.16.2",
     "fs": "0.0.1-security",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.10.0",
+    "multer": "^1.2.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "sql.js": "^0.4.0",
-    "sqlite3": "^3.1.13",
-    "multer": "^1.2.0"
+    "sqlite3": "^3.1.13"
   }
 }

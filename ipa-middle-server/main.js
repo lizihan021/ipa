@@ -15,10 +15,15 @@ app.use(bodyParser.urlencoded( {extended: true} ))
 var multer = require('multer');
 var Storage = multer.diskStorage({
     destination: function(req, file, callback) {
-       callback(null, __dirname + "/Images");
+       callback(null, __dirname + "/public/images");
     },
     filename: function(req, file, callback) {
-       callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+      let filename = file.fieldname + "_" + Date.now() + "_" + file.originalname
+      callback(null, filename);
+      let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+      let query = "INSERT INTO photos(photoname, robotid) VALUES (\"" + filename + "\", 1)"
+      console.log(query)
+      db.run(query)
     }
 });
 var upload = multer({
@@ -27,12 +32,25 @@ var upload = multer({
 
 app.post("/api/Upload", function(req, res) {
     upload(req, res, function(err) {
-       if (err) {
+        if (err) {
           console.log(err)
-           return res.end("Something went wrong!");
-       }
-       console.log("File uploaded sucessfully!.")
-       return res.end("File uploaded sucessfully!.");
+          return res.end("Something went wrong!");
+        }
+
+        console.log(err)
+
+        let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+        let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
+        db.all(query, function(err, row){
+          if (row.length > 5) {
+            query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
+            fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
+            db.run(query)
+          }
+          // res.render('mes', {mes:"updated "+row['ip']})
+          console.log("File uploaded sucessfully!.")
+          return res.end("File uploaded sucessfully!.");
+        });
     });
 });
 ///////////////////////////////////////
@@ -170,19 +188,12 @@ app.post('/api/parseaction', function (req, res) {
 
 app.post('/api/uploadpicture', function(req, res){
 
-  console.log("start")
-
-  let new_body = req.body
-  let counter = 0
-  let body_req = {}
   for (let key in new_body) {
     if (counter == 0){
       body = JSON.parse(key)
       counter = 1;
     }
   }
-
-
 
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT ip FROM robots WHERE robotid=" + body_req.id;

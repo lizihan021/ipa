@@ -2,7 +2,6 @@ CREATE TABLE robots(
     ip VARCHAR(20) NOT NULL,
     robotid INTEGER NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    curnum INTEGER NOT NULL,
     PRIMARY KEY(robotid)
 );
 
@@ -17,4 +16,11 @@ CREATE TABLE confuses(
     command VARCHAR(40) NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(command)
-)
+);
+
+CREATE TABLE photos(
+    photoname VARCHAR(200) NOT NULL,
+    robotid INTEGER NOT NULL,
+    uploadtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY(photoname)
+);

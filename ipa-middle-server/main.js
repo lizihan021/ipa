@@ -37,8 +37,6 @@ app.post("/api/Upload", function(req, res) {
           return res.end("Something went wrong!");
         }
 
-        console.log(err)
-
         let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
         let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
         db.all(query, function(err, row){

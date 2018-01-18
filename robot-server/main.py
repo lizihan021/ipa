@@ -117,6 +117,7 @@ def someFunc(f):
 
 # get video stream 
 def gen():
+    counter = 0
     while True:
         try:
             time.sleep(0.1)
@@ -125,9 +126,11 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            text_file = open("Output.jpg", "w")
-            text_file.write(frame)
-            text_file.close()
+            if counter == 0:              
+                text_file = open("Output.jpg", "w")
+                text_file.write(frame)
+                text_file.close()
+                counter = 1
             # thread.start_new_thread(someFunc, (text_file))
 
             yield (b'--frame\r\n'

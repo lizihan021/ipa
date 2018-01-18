@@ -125,9 +125,9 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            text_file = open("Output.jpg", "w")
-            text_file.write(frame)
-            thread.start_new_thread(someFunc, (text_file))
+            # text_file = open("Output.jpg", "w")
+            # text_file.write(frame)
+            # thread.start_new_thread(someFunc, (text_file))
 
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')

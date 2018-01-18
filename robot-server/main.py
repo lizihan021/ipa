@@ -9,6 +9,8 @@ import freenect
 import unirest
 import cv2
 import sys, serial, time
+import requests
+import thread
 
 helpText = """\
 Supported Keys:
@@ -109,6 +111,10 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
+def someFunc(f):
+    r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': f})
+    f.close()
+
 # get video stream 
 def gen():
     while True:
@@ -119,7 +125,10 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            consumeGETRequestASync(frame)
+            text_file = open("Output.jpg", "w")
+            text_file.write(frame)
+            thread.start_new_thread(someFunc, (text_file))
+
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         except KeyboardInterrupt:

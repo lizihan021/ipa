@@ -112,7 +112,7 @@ def index():
     return render_template('index.html')
 
 def someFunc(frame):
-    text_file = open("Output.jpg", "w")
+    text_file = open("Output.jpg", "wr")
     text_file.write(frame)
     r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': text_file})
     text_file.close()

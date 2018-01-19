@@ -105,7 +105,7 @@ def index():
 def someFunc(jpeg):
     with tempfile.TemporaryFile() as t:
         t.write(jpeg)
-        t.flush()
+        t.seek(0)
         r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
             data={'filename':"yo.jpg"})
     #time.sleep(2)

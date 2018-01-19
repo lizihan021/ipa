@@ -117,9 +117,13 @@ def gen():
     while True:
         try:
             time.sleep(0.1)
+            print("?wfwf")
             array,_ = freenect.sync_get_video()
+            print("camera moving")
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
+            print("fsdlisfgiuse")
             output = array
+            print("dsfgsgewftwfg")
             ret, jpeg = cv2.imencode('.jpg',output)
             # if counter == 0:
             #     file = open("image.jpg", "w")

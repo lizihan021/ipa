@@ -31,24 +31,23 @@ var upload = multer({
 }).array("imgUploader", 3);
 
 app.post("/api/Upload", function(req, res) {
+    let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+    let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
+    db.all(query, function(err, row){
+      if (row.length > 5) {
+        query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
+        fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
+        db.run(query)
+      }
+      // res.render('mes', {mes:"updated "+row['ip']})
+      console.log("File uploaded sucessfully!.")
+      return res.end("File uploaded sucessfully!.");
+    });
     upload(req, res, function(err) {
         if (err) {
           console.log(err)
           return res.end("Something went wrong!");
         }
-
-        let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-        let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
-        db.all(query, function(err, row){
-          if (row.length > 5) {
-            query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
-            fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
-            db.run(query)
-          }
-          // res.render('mes', {mes:"updated "+row['ip']})
-          console.log("File uploaded sucessfully!.")
-          return res.end("File uploaded sucessfully!.");
-        });
     });
 });
 ///////////////////////////////////////

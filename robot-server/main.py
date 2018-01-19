@@ -115,7 +115,8 @@ def index():
 def someFunc(jpeg):
     with tempfile.TemporaryFile() as t:
         t.write(jpeg)
-        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t})
+        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
+            data={'filename':"yo.jpg"})
 
 # get video stream 
 def gen():

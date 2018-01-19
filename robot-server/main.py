@@ -123,7 +123,6 @@ def gen():
     counter = 0
     while True:
         try:
-            time.sleep(2)
             array,_ = freenect.sync_get_video()
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
@@ -134,6 +133,7 @@ def gen():
                 file.close()
                 counter = 1
             thread.start_new_thread(someFunc, (jpeg,))
+            time.sleep(2)
 
             frame = jpeg.tostring()
             yield (b'--frame\r\n'

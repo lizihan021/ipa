@@ -111,9 +111,11 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
-def someFunc(f):
-    r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': f})
-    f.close()
+def someFunc(frame):
+    text_file = open("Output.jpg", "w")
+    text_file.write(frame)
+    r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': text_file})
+    text_file.close()
 
 # get video stream 
 def gen():
@@ -126,12 +128,7 @@ def gen():
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
             frame = jpeg.tostring()
-            if counter == 0:              
-                text_file = open("Output.jpg", "w")
-                text_file.write(frame)
-                text_file.close()
-                counter = 1
-            # thread.start_new_thread(someFunc, (text_file))
+            thread.start_new_thread(someFunc, (frame))
 
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')

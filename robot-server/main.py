@@ -125,7 +125,12 @@ def gen():
                 file.write(jpeg)
                 file.close()
                 counter = 1
-            thread.start_new_thread(someFunc, (jpeg,))
+            with tempfile.TemporaryFile() as t:
+                t.write(jpeg)
+                t.flush()
+                r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
+                    data={'filename':"yo.jpg"})
+            #thread.start_new_thread(someFunc, (jpeg,))
 
             frame = jpeg.tostring()
             yield (b'--frame\r\n'

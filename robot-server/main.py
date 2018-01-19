@@ -103,8 +103,7 @@ def index():
     return render_template('index.html')
 
 def someFunc(jpeg):
-    with tempfile.TemporaryFile() as t:
-        t.write("hhhhh")
+    with open("image.jpg", "r") as t:
         r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
             data={'filename':"yo.jpg"})
     #time.sleep(2)

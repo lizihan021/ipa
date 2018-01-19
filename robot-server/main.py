@@ -11,6 +11,7 @@ import cv2
 import sys, serial, time
 import requests
 import thread
+import tempfile
 
 helpText = """\
 Supported Keys:
@@ -111,12 +112,10 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
-def someFunc(frame):
-    text_file = open("Output.jpg", "wr")
-    text_file.write(frame)
-    text_file.close()
-    with open("Output.jpg", "wr") as f:
-        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': f})
+def someFunc(jpeg):
+    with tempfile.TemporaryFile() as t:
+        t.write(jpeg)
+        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t})
 
 # get video stream 
 def gen():
@@ -128,9 +127,9 @@ def gen():
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
-            frame = jpeg.tostring()
-            thread.start_new_thread(someFunc, (frame,))
+            thread.start_new_thread(someFunc, (jpeg,))
 
+            frame = jpeg.tostring()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
         except KeyboardInterrupt:

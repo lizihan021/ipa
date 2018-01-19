@@ -114,15 +114,16 @@ def index():
 def someFunc(frame):
     text_file = open("Output.jpg", "wr")
     text_file.write(frame)
-    #r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': text_file})
     text_file.close()
+    with open("Output.jpg", "wr") as f:
+        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': f})
 
 # get video stream 
 def gen():
     counter = 0
     while True:
         try:
-            time.sleep(5)
+            time.sleep(2)
             array,_ = freenect.sync_get_video()
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array

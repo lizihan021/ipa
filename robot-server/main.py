@@ -117,15 +117,15 @@ def gen():
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
-            if counter == 0:
-                file = open("image.jpg", "w")
-                file.write(jpeg)
-                file.close()
-                counter = 1
-            # with tempfile.NamedTemporaryFile(suffix=".jpg") as t:
-            #     t.write(jpeg)
-            #     t.flush()
-            with open("image.jpg", "rb") as t:
+            # if counter == 0:
+            #     file = open("image.jpg", "w")
+            #     file.write(jpeg)
+            #     file.close()
+            #     counter = 1
+            with tempfile.SpooledTemporaryFile(mode='r+b', suffix=".jpg") as t:
+                t.write(jpeg)
+                t.flush()
+            #with open("image.jpg", "rb") as t:
                 r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
                     data={'filename':"yo.jpg"})
             #thread.start_new_thread(someFunc, (jpeg,))

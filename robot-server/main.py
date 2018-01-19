@@ -122,9 +122,10 @@ def gen():
                 file.write(jpeg)
                 file.close()
                 counter = 1
-            with tempfile.NamedTemporaryFile(suffix=".jpg") as t:
-                t.write(jpeg)
-                t.flush()
+            # with tempfile.NamedTemporaryFile(suffix=".jpg") as t:
+            #     t.write(jpeg)
+            #     t.flush()
+            with open("image.jpg", "rb") as t:
                 r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
                     data={'filename':"yo.jpg"})
             #thread.start_new_thread(someFunc, (jpeg,))

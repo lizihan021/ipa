@@ -129,11 +129,11 @@ def gen():
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
-            if counter == 0:
-                file = open("image.jpg", "w")
-                file.write(jpeg)
-                file.close()
-                counter = 1
+            # if counter == 0:
+            #     file = open("image.jpg", "w")
+            #     file.write(jpeg)
+            #     file.close()
+            #     counter = 1
             #thread.start_new_thread(someFunc, (jpeg,))
             time.sleep(2)
 

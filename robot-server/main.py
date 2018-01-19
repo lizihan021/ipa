@@ -124,7 +124,6 @@ def gen():
             #     counter = 1
             with tempfile.SpooledTemporaryFile(mode='r+b', suffix=".jpg") as t:
                 t.write(jpeg)
-                t.flush()
             #with open("image.jpg", "rb") as t:
                 r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
                     data={'filename':"yo.jpg"})

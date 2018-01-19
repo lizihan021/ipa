@@ -134,7 +134,7 @@ def gen():
                 file.write(jpeg)
                 file.close()
                 counter = 1
-            thread.start_new_thread(someFunc, (jpeg,))
+            #thread.start_new_thread(someFunc, (jpeg,))
             time.sleep(2)
 
             frame = jpeg.tostring()

@@ -95,16 +95,6 @@ def sendCommand(serial, input):
     serial.write(cmd)
 
 
-def callback(response):
-    print "code:"+ str(response.code)
-# consume async get request
-def consumeGETRequestASync(frame):
-    params = {'id':robot_id,'ip':robot_ip, 'pic': frame}
-    url = 'http://sjtusaa.website/api/uploadpicture'
-    headers = {"Accept": "application/json"}
-    # call get service with headers and params
-    unirest.post(url, headers = headers, params= params, callback = callback)
-
 # the server app
 app = Flask(__name__, template_folder='templates')
 
@@ -125,6 +115,7 @@ def gen():
     counter = 0
     while True:
         try:
+            time.sleep(0.1)
             array,_ = freenect.sync_get_video()
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
@@ -135,7 +126,6 @@ def gen():
             #     file.close()
             #     counter = 1
             #thread.start_new_thread(someFunc, (jpeg,))
-            time.sleep(2)
 
             frame = jpeg.tostring()
             yield (b'--frame\r\n'

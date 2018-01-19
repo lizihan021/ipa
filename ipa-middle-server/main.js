@@ -18,7 +18,7 @@ var Storage = multer.diskStorage({
        callback(null, __dirname + "/public/images");
     },
     filename: function(req, file, callback) {
-      let filename = file.fieldname + "_" + Date.now() + ".jpg"
+      let filename = file.fieldname + "_" + Date.now() + file.originalname
       callback(null, filename);
       let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
       let query = "INSERT INTO photos(photoname, robotid) VALUES (\"" + filename + "\", 1)"

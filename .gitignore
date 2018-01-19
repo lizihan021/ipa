@@ -1,2 +1,4 @@
 ipa-middle-server/node_modules
+ipa-middle-server/public/images
+ipa-middle-server/sql
 libfreenect

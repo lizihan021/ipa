@@ -113,6 +113,7 @@ def index():
 # get video stream 
 def gen():
     counter = 0
+    print("fffwf")
     while True:
         try:
             time.sleep(0.1)
@@ -138,6 +139,7 @@ def gen():
 
 @app.route('/video_feed')
 def video_feed():
+    print("teste")
     return Response(gen(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/control/<command>')

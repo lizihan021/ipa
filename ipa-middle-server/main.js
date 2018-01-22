@@ -35,9 +35,9 @@ app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
-      if (row.length > 10) {
+      if (row.length > 8) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
-        query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
+        let query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
         db.run(query)

@@ -37,10 +37,13 @@ app.post("/api/Upload", function(req, res) {
     db.all(query, function(err, row){
       if (row.length > 8) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
-        let query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
-        fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
         db.run(query)
+        db.close()
+
+        let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+        let query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
+        fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
         db.run(query2)
         db.close()
       }

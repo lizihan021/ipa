@@ -35,27 +35,36 @@ app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
-      if (row.length > 8) {
-        query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
+      if (row.length > 2) {
+        query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\" OR \"" + row[1]["photoname"] + "\""
+        console.log(__dirname + "/public/images/" + row[0]["photoname"])
+        console.log(__dirname + "/public/images/" + row[1]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
-        db.run(query)
-        db.close()
-
-        let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
-        let query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
-        db.run(query2)
+        db.run(query, function(err) {
+          db.close()
+          upload(req, res, function(err) {
+            if (err) {
+              console.log(err)
+              return res.end("Something went wrong!");
+            }
+            return res.end("File uploaded sucessfully!.");
+          });
+        })
+      }
+      else {
         db.close()
+        upload(req, res, function(err) {
+          if (err) {
+            console.log(err)
+            return res.end("Something went wrong!");
+          }
+          return res.end("File uploaded sucessfully!.");
+        });
       }
       // res.render('mes', {mes:"updated "+row['ip']})
+      
       console.log("File uploaded sucessfully!.")
-    });
-    upload(req, res, function(err) {
-        if (err) {
-          console.log(err)
-          return res.end("Something went wrong!");
-        }
-        return res.end("File uploaded sucessfully!.");
     });
 });
 ///////////////////////////////////////

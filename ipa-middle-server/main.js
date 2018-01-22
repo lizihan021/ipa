@@ -36,7 +36,9 @@ app.post("/api/Upload", function(req, res) {
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
       if (row.length > 2) {
-        query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\" OR \"" + row[1]["photoname"] + "\""
+        console.log(row)
+        query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\" OR photoname=\"" + row[1]["photoname"] + "\""
+        console.log(query)
         console.log(__dirname + "/public/images/" + row[0]["photoname"])
         console.log(__dirname + "/public/images/" + row[1]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])

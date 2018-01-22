@@ -35,12 +35,8 @@ app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
-      if (row.length > 2) {
-        console.log(row)
+      if (row.length > 10) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\" OR photoname=\"" + row[1]["photoname"] + "\""
-        console.log(query)
-        console.log(__dirname + "/public/images/" + row[0]["photoname"])
-        console.log(__dirname + "/public/images/" + row[1]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
         db.run(query, function(err) {
@@ -63,9 +59,7 @@ app.post("/api/Upload", function(req, res) {
           }
           return res.end("File uploaded sucessfully!.");
         });
-      }
-      // res.render('mes', {mes:"updated "+row['ip']})
-      
+      }      
       console.log("File uploaded sucessfully!.")
     });
 });
@@ -74,7 +68,6 @@ app.post("/api/Upload", function(req, res) {
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
 let fs = require('fs')
 db.all("SELECT * FROM robots", function(err, rows){
-  console.log(rows)
 });
 
 //////////////////////////////////////

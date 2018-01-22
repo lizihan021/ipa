@@ -25,6 +25,7 @@
     "ejs": "^2.5.7",
     "es6-promise": "^4.1.1",
     "express": "^4.16.2",
+    "express-zip": "^2.0.1",
     "fs": "0.0.1-security",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.10.0",

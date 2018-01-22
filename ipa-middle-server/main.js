@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const sqlite3 = require('sqlite3').verbose();
+let zip = require('express-zip');
 import "isomorphic-fetch"
 
 app.set('views', __dirname + '/public');
@@ -35,7 +36,7 @@ app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
-      if (row.length > 10) {
+      if (row.length > 100) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\" OR photoname=\"" + row[1]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
         fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
@@ -65,9 +66,38 @@ app.post("/api/Upload", function(req, res) {
 });
 ///////////////////////////////////////
 
+// the api for the download of files
+app.get("/api/download", function(req, res){
+  let num_filesstr = req.param("num") + ""
+  console.log("some one asking for " + num_files + " images")
+  let num_files = parseInt(num_filesstr)
+  if (num_files > 40) {
+    res.end("you are asking for too many files")
+  }
+  let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
+  let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime DESC"
+  db.all(query, function(err, row){
+    if (err) {
+      res.end("error with the db!")
+    }
+
+    let file_arr = []
+    for (let i = 0; i < num_files * 2; i++) {
+      file_arr.push({ path : __dirname + "/public/images/" + row[i]["photoname"], name : row[i]["photoname"]})
+    }
+    console.log(file_arr)
+    res.zip(file_arr);
+  })
+});
+
+
+
+
+
 let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
 let fs = require('fs')
 db.all("SELECT * FROM robots", function(err, rows){
+  console.log(rows)
 });
 
 //////////////////////////////////////

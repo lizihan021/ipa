@@ -18,7 +18,7 @@ var Storage = multer.diskStorage({
        callback(null, __dirname + "/public/images");
     },
     filename: function(req, file, callback) {
-      let filename = file.fieldname + "_" + Date.now() + "_" + file.originalname
+      let filename = file.fieldname + "_" + file.originalname
       callback(null, filename);
       let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
       let query = "INSERT INTO photos(photoname, robotid) VALUES (\"" + filename + "\", 1)"
@@ -35,21 +35,24 @@ app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
     db.all(query, function(err, row){
-      if (row.length > 5) {
+      if (row.length > 10) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
+        query2 = "DELETE FROM photos WHERE photoname=\"" + row[1]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
+        fs.unlink(__dirname + "/public/images/" + row[1]["photoname"])
         db.run(query)
+        db.run(query2)
         db.close()
       }
       // res.render('mes', {mes:"updated "+row['ip']})
       console.log("File uploaded sucessfully!.")
-      return res.end("File uploaded sucessfully!.");
     });
     upload(req, res, function(err) {
         if (err) {
           console.log(err)
           return res.end("Something went wrong!");
         }
+        return res.end("File uploaded sucessfully!.");
     });
 });
 ///////////////////////////////////////

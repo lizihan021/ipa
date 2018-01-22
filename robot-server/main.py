@@ -113,11 +113,11 @@ def gen():
     while True:
         try:
             time.sleep(2)
-            img_array, _ = freenect.sync_get_video()
+            img_array, timestamp = freenect.sync_get_video()
             img_array = cv2.cvtColor(img_array,cv2.COLOR_RGB2BGR)
             cv2.imwrite(str(timestamp) + 'image.png',img_array)
 
-            depth_array, timestamp = freenect.sync_get_depth()
+            depth_array, _ = freenect.sync_get_depth()
             depth_array = depth_array.astype(np.uint8)
             cv2.imwrite(str(timestamp) + 'depth.png',depth)
 

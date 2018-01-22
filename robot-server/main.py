@@ -114,6 +114,7 @@ def gen():
         try:
             time.sleep(2)
             array,_ = freenect.sync_get_video()
+            #depthArray, timestamp = freenect.sync_get_depth()
             array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
             output = array
             ret, jpeg = cv2.imencode('.jpg',output)
@@ -123,7 +124,7 @@ def gen():
             file.close()
 
             with open("image.jpg", "rb") as t:
-                r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t}, \
+                r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t,'imgUploader2': t}, \
                     data={'filename':"yo.jpg"})
             #thread.start_new_thread(someFunc, (jpeg,))
 

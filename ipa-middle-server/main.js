@@ -24,6 +24,7 @@ var Storage = multer.diskStorage({
       let query = "INSERT INTO photos(photoname, robotid) VALUES (\"" + filename + "\", 1)"
       console.log(query)
       db.run(query)
+      db.close()
     }
 });
 var upload = multer({
@@ -38,6 +39,7 @@ app.post("/api/Upload", function(req, res) {
         query = "DELETE FROM photos WHERE photoname=\"" + row[0]["photoname"] + "\""
         fs.unlink(__dirname + "/public/images/" + row[0]["photoname"])
         db.run(query)
+        db.close()
       }
       // res.render('mes', {mes:"updated "+row['ip']})
       console.log("File uploaded sucessfully!.")

@@ -122,8 +122,8 @@ def gen():
             cv2.imwrite(str(timestamp) + 'depth.png',depth)
 
             r = requests.post('http://35.0.30.117:3000/api/Upload', \
-                files=[('imgUploader': open(str(timestamp) + "image.png", "rb")), \
-                       ('imgUploader': open(str(timestamp) + "depth.png", "rb"))])
+                files=[('imgUploader', open(str(timestamp) + "image.png", "rb")), \
+                       ('imgUploader', open(str(timestamp) + "depth.png", "rb"))])
             #thread.start_new_thread(someFunc, (jpeg,))
 
             frame = jpeg.tostring()

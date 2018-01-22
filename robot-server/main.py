@@ -113,19 +113,17 @@ def gen():
     while True:
         try:
             time.sleep(2)
-            array,_ = freenect.sync_get_video()
-            #depthArray, timestamp = freenect.sync_get_depth()
-            array = cv2.cvtColor(array,cv2.COLOR_RGB2BGR)
-            output = array
-            ret, jpeg = cv2.imencode('.jpg',output)
+            img_array, _ = freenect.sync_get_video()
+            img_array = cv2.cvtColor(img_array,cv2.COLOR_RGB2BGR)
+            cv2.imwrite(str(timestamp) + 'image.png',img_array)
 
-            file = open("image.jpg", "w")
-            file.write(jpeg)
-            file.close()
+            depth_array, timestamp = freenect.sync_get_depth()
+            depth_array = depth_array.astype(np.uint8)
+            cv2.imwrite(str(timestamp) + 'depth.png',depth)
 
-            with open("image.jpg", "rb") as t:
-                r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t,'imgUploader2': t}, \
-                    data={'filename':"yo.jpg"})
+            r = requests.post('http://35.0.30.117:3000/api/Upload', \
+                files=[('imgUploader': open(str(timestamp) + "image.png", "rb")), \
+                       ('imgUploader': open(str(timestamp) + "depth.png", "rb"))])
             #thread.start_new_thread(someFunc, (jpeg,))
 
             frame = jpeg.tostring()

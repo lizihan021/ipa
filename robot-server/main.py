@@ -115,6 +115,7 @@ def gen():
             time.sleep(2)
             img_array, timestamp = freenect.sync_get_video()
             img_array = cv2.cvtColor(img_array,cv2.COLOR_RGB2BGR)
+            ret, jpeg = cv2.imencode('.jpg', img_array)
             cv2.imwrite(str(timestamp) + 'image.png', img_array)
 
             depth_array, _ = freenect.sync_get_depth()

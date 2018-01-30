@@ -109,6 +109,7 @@ def someFunc(jpeg):
 
 # get video stream 
 def gen():
+    folder = "robot-server/robot_img/"
     counter = 0
     while True:
         try:
@@ -116,15 +117,15 @@ def gen():
             img_array, timestamp = freenect.sync_get_video()
             img_array = cv2.cvtColor(img_array,cv2.COLOR_RGB2BGR)
             ret, jpeg = cv2.imencode('.jpg', img_array)
-            cv2.imwrite(str(timestamp) + 'image.png', img_array)
+            cv2.imwrite(folder + str(timestamp) + 'image.png', img_array)
 
             depth_array, _ = freenect.sync_get_depth()
             depth_array = depth_array.astype(np.uint8)
-            cv2.imwrite(str(timestamp) + 'depth.png', depth_array)
+            cv2.imwrite(folder + str(timestamp) + 'depth.png', depth_array)
 
             r = requests.post('http://35.0.31.190:3000/api/Upload', \
-                files=[('imgUploader', open(str(timestamp) + "image.png", "rb")), \
-                       ('imgUploader', open(str(timestamp) + "depth.png", "rb"))])
+                files=[('imgUploader', open(folder + str(timestamp) + "image.png", "rb")), \
+                       ('imgUploader', open(folder + str(timestamp) + "depth.png", "rb"))])
             #thread.start_new_thread(someFunc, (jpeg,))
 
             frame = jpeg.tostring()

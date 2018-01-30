@@ -122,6 +122,8 @@ def gen():
             depth_array, _ = freenect.sync_get_depth()
             depth_array = depth_array.astype(np.uint8)
             cv2.imwrite(folder + str(timestamp) + 'depth.png', depth_array)
+            
+            print folder + str(timestamp) + 'depth.png'
 
             r = requests.post('http://35.0.31.190:3000/api/Upload', \
                 files=[('imgUploader', open(folder + str(timestamp) + "image.png", "rb")), \

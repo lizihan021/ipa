@@ -102,9 +102,9 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
-def someFunc(jpeg):
-    with open("image.jpg", "rb") as t:
-        r = requests.post('http://35.0.21.172:3000/api/Upload', files={'imgUploader': t})
+# def someFunc(jpeg):
+#     with open("image.jpg", "rb") as t:
+#         r = requests.post('http://35.0.21.172:3000/api/Upload', files={'imgUploader': t})
     #time.sleep(2)
 
 # get video stream 
@@ -125,7 +125,7 @@ def gen():
             
             print folder + str(timestamp) + 'depth.png'
 
-            r = requests.post('http://35.0.31.190:3000/api/Upload', \
+            r = requests.post('http://35.0.21.172:3000/api/Upload', \
                 files=[('imgUploader', open(folder + str(timestamp) + "image.png", "rb")), \
                        ('imgUploader', open(folder + str(timestamp) + "depth.png", "rb"))])
             #thread.start_new_thread(someFunc, (jpeg,))

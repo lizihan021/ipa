@@ -104,7 +104,7 @@ def index():
 
 def someFunc(jpeg):
     with open("image.jpg", "rb") as t:
-        r = requests.post('http://35.0.30.117:3000/api/Upload', files={'imgUploader': t})
+        r = requests.post('http://35.0.21.172:3000/api/Upload', files={'imgUploader': t})
     #time.sleep(2)
 
 # get video stream 

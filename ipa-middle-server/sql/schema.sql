@@ -6,14 +6,14 @@ CREATE TABLE robots(
 );
 
 CREATE TABLE commands(
-    command VARCHAR(40) NOT NULL,
-    colist VARCHAR(40) NOT NULL,
+    command VARCHAR(2000) NOT NULL,
+    colist VARCHAR(2000) NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(command)
 );
 
 CREATE TABLE confuses(
-    command VARCHAR(40) NOT NULL,
+    command VARCHAR(2000) NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(command)
 );

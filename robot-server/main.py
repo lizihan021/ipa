@@ -102,10 +102,6 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
-# def someFunc(jpeg):
-#     with open("image.jpg", "rb") as t:
-#         r = requests.post('http://35.0.21.172:3000/api/Upload', files={'imgUploader': t})
-    #time.sleep(2)
 
 # get video stream 
 def gen():

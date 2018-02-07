@@ -32,6 +32,9 @@ var upload = multer({
     storage: Storage
 }).array("imgUploader", 3);
 
+
+
+// the api to upload image to the database
 app.post("/api/Upload", function(req, res) {
     let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
     let query = "SELECT * FROM photos WHERE robotid = 1 ORDER BY uploadtime ASC"
@@ -155,6 +158,7 @@ function add_control_database(robot_id, command){
 }
 
 
+// inser the ip for a robot id
 function insert_robot_ip(id, ip, res){
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT ip FROM robots WHERE robotid=" + id;
@@ -225,6 +229,8 @@ app.post('/api/parseaction', function (req, res) {
 })
 
 
+// upload the picture
+// WARNING: this api has been abondond
 app.post('/api/uploadpicture', function(req, res){
 
   for (let key in new_body) {
@@ -287,20 +293,11 @@ app.post('/api/uploadpicture', function(req, res){
         });
       }
     }
-
-    // });
   });
-
-  // fileStore.put({
-  //   filename: 'test.txt',
-  //   contentType: 'application/json',
-  //   stream: fs.createReadStream('/test.txt')
-  // }, function(err) {
-  //   console.log(err); // undefined 
-  // });
 })
 
 
+// return all the avaliable command in the database
 app.get('/api/getvalidco', function(req, res){
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "SELECT * FROM commands"
@@ -331,22 +328,7 @@ app.post('/api/interpretaction', (req, res)=>{
   console.log(req.body.text)
   console.log(req.body.decry, "decry")
   let vec = req.body.decry.split(" ")
-  let tmp = ""
-  for (let i = 0; i < vec.length; i++){
-  	if (vec[i] === "right"){
-  		tmp += "1"
-  	}
-  	else if (vec[i] === "left"){
-  		tmp += "2"
-  	}
-  	else if (vec[i] === "up"){
-  		tmp += "3"
-  	}
-  	else if (vec[i] === "down"){
-  		tmp += "4"
-  	}
-  }
-
+  let tmp = req.body.decry
 
   let db = new sqlite3.Database(__dirname + '/model/robot.sqlite');
   let query = "INSERT INTO commands(command, colist) VALUES('"
@@ -367,7 +349,7 @@ app.get('/robot/:id', function(req, res){
 
   db.get(query, function(err, row){
     if(row){
-      res.render('robot', {robot_num: req.params.id, robot_ip: row['ip']});
+      res.render('robot', {robot_num: req.params.id, robot_ip: row['ip'], robot_id: req.params.id});
     }
     else{
       res.render('mes', {mes: "robot with id " + req.params.id + " was not found"});
@@ -375,7 +357,10 @@ app.get('/robot/:id', function(req, res){
   });
   
 })
+
+
 // xxx TODO: vulnerble to SQL inject
+// the api to control the database that is used to control the robot
 app.get('/robotcontrol/:id/:control', function(req, res){
   // console.log("Accessed robot " + req.params.id + " with control: " + req.params.control)
   // send_ajax_request(req.params.id, ":3000/control/" + req.params.control)
@@ -384,18 +369,24 @@ app.get('/robotcontrol/:id/:control', function(req, res){
   res.send(JSON.stringify({"dumy" : 1}))
 });
 
+
 app.get('/setip/:id/:ip', function(req, res){
   // console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
   insert_robot_ip(req.params.id, req.params.ip, res)
 });
 
+
+///////////////////////////////////////////////
+// the api to render the label page for the crowdworker
 app.get('/transfer', function(req, res){
   // console.log("Updated robot " + req.params.id + " with ip: " + req.params.ip)
   res.render('transfer');
 });
 
+
+// binding port
 app.listen(3000, function () {
-  // console.log('Example app listening on port 3000!')
+  console.log('Middle server start at the localhost:3000!')
 })
 
 db.close();

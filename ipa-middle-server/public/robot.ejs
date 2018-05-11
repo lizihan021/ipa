@@ -1,0 +1,189 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$( document ).ready(function() {
+    $("#up").mousedown(()=>{send_csrf("up")});
+    $("#down").mousedown(()=>{send_csrf("down")});
+    $("#left").mousedown(()=>{send_csrf("left")});
+    $("#right").mousedown(()=>{send_csrf("right")});
+    $("#beep").click(()=>{send_csrf("beep")});
+    $("#stop").click(()=>{send_csrf("stop")});
+    $("#reset").click(()=>{send_csrf("reset")});
+
+    $("#up").mouseup(()=>{send_csrf("stop")});
+    $("#down").mouseup(()=>{send_csrf("stop")});
+    $("#left").mouseup(()=>{send_csrf("stop")});
+    $("#right").mouseup(()=>{send_csrf("stop")});
+    $("#submit").mouseup(()=>{
+        console.log("ffff")
+        var commands = $("#commands").val()
+        send_complex_commands(commands)
+        $("#commands").val("")
+    });
+
+    rendercommandlist()
+});
+
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function send_csrf(command){
+    // trivial commands
+	// var request = new XMLHttpRequest();
+	// var params = "username=attacker";
+	// request.open('GET', "http://<%= robot_ip %>:3000/control/"+command, true);
+	// request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	// request.setRequestHeader("Content-length", params.length);
+	// request.withCredentials = true;
+	// request.setRequestHeader("Connection", "close");
+	// request.send(params);
+
+    var request = new XMLHttpRequest();
+    var params = "username=attacker";
+    request.open('GET', "http://localhost:3000/robotcontrol/<% robot_id %>/"+command, true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.setRequestHeader("Content-length", params.length);
+    request.withCredentials = true;
+    request.setRequestHeader("Connection", "close");
+    request.send(params);
+    // httpGet("/robotcontrol/"+ <%= robot_num %> +"/"+command)
+}
+
+function send_complex_commands(commands){
+    console.log(commands);
+    fetch("/api/parseaction", {
+        credentials: 'same-origin',
+        method: 'POST',
+        body: JSON.stringify({
+            text: commands,
+        }),
+        headers: {"Content-Type": "application/json"},
+    })
+    .then((response) => {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+    })
+    .then((data) => {
+        console.log("data", data["commands"])
+        var command_arr = data["commands"].split(" ")
+
+        for (let i = 0; i < data["commands"].length; i++){
+            if (i % 2 == 0) {
+                send_csrf(command_arr[i])
+            }
+            else {
+                sleep(parseInt(command_arr[i]));
+            }
+            
+        }
+    })
+    .catch(error => console.log(error));
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
+
+function rendercommandlist(){
+
+    fetch("/api/getvalidco", {
+        credentials: 'same-origin',
+        method: 'GET',
+    })
+    .then((response) => {
+        if (!response.ok) throw Error(response.statusText);
+        return response.json();
+    })
+    .then((data) => {
+        console.log(data)
+        let command_dict = {
+            "1" : "left",
+            "2" : "right",
+            "3" : "up",
+            "4" : "down",
+            "5" : "beep"
+        }
+
+        for (let i = 0; i < data.length; i++){
+            var iDiv = document.createElement('div');
+            iDiv.className = 'row';
+
+            var iiDiv = document.createElement('button');
+            iiDiv.innerHTML = data[i].command;
+            iiDiv.id = i + "co"
+            iiDiv.style.float = "left"
+            iiDiv.style.margin = "2px"
+            iiDiv.className = 'btn-primary'
+            iiDiv.onclick = onclickfunction
+
+            iDiv.appendChild(iiDiv)
+
+            var s = document.getElementById('commandlist');
+            s.appendChild(iDiv);
+
+
+            // var iiiDiv = document.createElement('div');
+            // let inter = "         =>  "
+            // for (let j = 0; j < data[i].colist.length; j++){
+            //     inter += command_dict[data[i].colist[j]]
+            //     inter += " "
+            // }
+
+            // iiiDiv.innerHTML = inter;
+            // iDiv.appendChild(iiiDiv)
+        }
+    })
+    .catch(error => console.log(error));
+}
+
+
+function onclickfunction(e){
+    console.log(this.innerHTML)
+    send_complex_commands(this.innerHTML)
+}
+
+</script>
+
+<div class="container">
+	<h3>The Control Interface</h3>
+	<button id="up" class="btn btn-primary">up</button>
+	<button id="down" class="btn btn-primary">down</button>
+	<button id="left" class="btn btn-primary">left</button>
+	<button id="right" class="btn btn-primary">right</button>
+	<button id="beep" class="btn btn-primary">beep</button>
+	<button id="stop" class="btn btn-primary">stop</button>
+	<button id="reset" class="btn btn-primary">reset</button>
+    <form>
+        <div class="form-group" style="width:50%">
+          <input type="text" class="form-control" id="commands" placeholder="input commands" name="commands">
+        </div>
+    </form>
+    <button id="submit" class="btn btn-primary">submit</button>
+
+	<div>
+	    <a href="/"><p>Back to home</a></p>
+	</div>
+    <div>
+        <h3>Avaliable commands:</h3>
+    </div>
+    <div id="commandlist" class="container">
+    </div>
+	<iframe style="width:700px;height:500px;" frameborder="0" src="http://<%= robot_ip %>:3000/video_feed"></iframe>
+</div>
+

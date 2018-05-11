@@ -1,0 +1,182 @@
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var submit_str = ""
+
+    function add_command(command_str){
+        let time = $("#time").val()
+        if (!time){
+            time = "1"
+        }
+        str = '<div class="btn btn-success">'+command_str+'</br>'+ time +'s</div>'
+        submit_str = submit_str + (command_str +" "+ time+" ")
+        $("#commands").append(str)
+    }
+
+    $( document ).ready(function() {
+        var request = new XMLHttpRequest();
+        var params = "username=worker";
+        request.open('GET', "http://localhost:3000/api/getconfusion", true);
+        request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        request.send(params);
+
+        request.onreadystatechange = function(){
+            if (request.readyState == 4 && request.status == 200)
+            {
+                change(request.responseText); // Another callback here
+            }
+        };
+
+        function change(data1){
+            console.log(data1)
+            data = JSON.parse(data1)
+            for (let i = 0; i < data.length; i++){
+                var iDiv = document.createElement('div');
+                iDiv.id = 'roww';
+                iDiv.className = 'row';
+
+                var iiDiv = document.createElement('div');
+                iiDiv.innerHTML = data[i].command;
+                iiDiv.id = i + "co"
+
+                var button = document.createElement("button");
+                button.innerHTML = "submit";
+                button.onclick = onclickfunction;
+                button.id = i.toString();
+
+                iDiv.appendChild(iiDiv)
+                iDiv.appendChild(button)
+
+                var s = document.getElementById('entrypoint');
+                s.appendChild(iDiv);
+
+                // $("#entrypoint").append(iDiv)
+
+            }
+        }
+
+        function onclickfunction(e){
+            console.log(this.id)
+            let command = $("#" + this.id + "co").text();
+            let inter = submit_str
+
+            console.log(command)
+            console.log(inter)
+
+            fetch("http://localhost:3000/api/interpretaction", {
+                credentials: 'same-origin',
+                method: 'POST',
+                body: JSON.stringify({
+                    text: command,
+                    decry: inter,
+                }),
+                headers: {"Content-Type": "application/json"},
+            })
+            .then((response) => {
+                if (!response.ok) throw Error(response.statusText);
+                console.log("succeed!")
+                location.reload()
+            })
+            .catch(error => console.log(error));
+        }
+
+
+
+
+    });
+
+</script>
+
+<style>
+.box0 {
+    padding: 20;
+    background: #dddddd;
+    text-align: center;
+}
+
+.box1 {
+    padding: 0 40 20 40;
+}
+.box2 {
+    padding: 0 40 20 40;
+    background: #eeeeee;
+    min-width: 340px;
+}
+.control-btn {
+    width: 100% !important;
+    min-width: 80px;
+}
+.padding-0{
+    padding-right:0;
+    padding-left:0;
+    min-width: 80px;
+}
+.padding-input{
+    padding-right:0;
+    padding-left:0;
+    min-width: 240px;
+}
+.btn {
+    border-radius:0px;
+}
+</style>
+
+<div class="box0">
+    <h1>Macro Command Generation</h1>
+</div>
+<div class="container" style="margin:0px;">
+    <div class="row" >
+    <div class="box2 col-xs-5">
+        <h3>Valid Commands: </h3>
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2 padding-0"></div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('up')">up</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('left')"> left</button>
+            </div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('down')">down</button>
+            </div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('right')"> right</button>
+            </div>
+        </div>
+        <div class="row" style="padding:7px;"></div>
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('beep')"> beep</button>
+            </div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('stop')">stop</button>
+            </div>
+            <div class="col-xs-2 padding-0">
+                <button class="btn btn-primary control-btn" onclick="add_command('reset')"> reset</button>
+            </div>
+        </div>
+        <div class="row" style="padding:7px;"></div>
+        <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-6 padding-input">
+                <input id="time" type="text" class="form-control" placeholder="Duration of the command (1s)"></input>
+            </div>
+        </div>
+        <h3>Commands Series: </h3>
+        <div id="commands"> </div>
+    </div>
+    <div class="box1 col-sm-7">
+        <h3>Command Waiting to be Labeled: </h3>
+        <div id="entrypoint" class="container"></div>
+    </div>
+    </div>
+</div>

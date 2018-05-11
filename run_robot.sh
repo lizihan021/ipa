@@ -1,0 +1,1 @@
+python ./robot-server/main.py open

@@ -56,13 +56,39 @@ The middle server resides in the `ipa-middle-server` folder. The middle server s
 To use the middle server, go to `ipa-middle-server/sql` folder, change the `data.sql` script to configure the robot ip and initial commands, the schema is set as follows:
 
 -`robots`: configure the robot ip and robot id
+
 -`commands` configure the initial command that the robot can recognize, each command is format as "direction time direction time"
+
 -`confuses`: configure the initial commands that the robot can not understand, normally set to be empty.
 
 After this run
 ```
 sh reset_test_db.sh
 ```
+
+Then run the  `./run_central.sh` to start the middle server, the folowing list introduces the api in the middle server,
+
+- `/api/Upload` POST request that is used to upload images to the middle server file system, which is normally called for internal usage. The middle server will takes the image uploaded by the robot and store in the file system. It also modify the database that record the image info. After the number of images reach a certain threshold (default: 100) the middle server will delete the oldest image.
+
+
+- `/api/download` GET request that enable the user to download the images stored in the file system. Params: `nums`, the number of image that the user request.
+
+- `/api/parseaction` GET request that respnse the translated commands in the database. If the command is not pretranslated in the database, the command will show up in the confusion table and let the crowd worker label it.
+
+- `/api/getvalidco` GET request that get all the pre translated command in the database
+
+- `/api/getconfusion` GET request that return all the command that currently store in the confusion table, which means the command that the middle server can not understand
+
+
+##### 4.4. Crowd Worker Label Interface
+
+The label interface enable the command that is currently in the confusion table to be labeld by crowd worker. The interface is split into two region,
+
+- `command list` resides in the right side of the interface, which shows the current confused command that waiting to be labeld by the crowd worker.
+
+- `translation buttons` resides in the left side of the interface, which enable the crowdworker interpret the command and add duration to each command that he interprets. Like for "turn right", he can iterpret as "right 1" which means turn right for one second.
+
+
 
 
 

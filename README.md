@@ -49,4 +49,20 @@ By default the robot will **keep acting one operation until it receives another 
 Under `open` mode, if everything works well and Kinect is connected to RPi, video feedback can be retrieved from URI `/video_feed`. **Video feedback under `local` mode is still in development.** 
 
 
+##### 4.3. Middle server
+
+The middle server resides in the `ipa-middle-server` folder. The middle server send the control command to the correct robot that user choose in the main page.
+
+To use the middle server, go to `ipa-middle-server/sql` folder, change the `data.sql` script to configure the robot ip and initial commands, the schema is set as follows:
+
+-`robots`: configure the robot ip and robot id
+-`commands` configure the initial command that the robot can recognize, each command is format as "direction time direction time"
+-`confuses`: configure the initial commands that the robot can not understand, normally set to be empty.
+
+After this run
+```
+sh reset_test_db.sh
+```
+
+
 
